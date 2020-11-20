@@ -13,7 +13,7 @@ export default function MyApp({Component, pageProps}) {
             <link rel="icon" href="/logo.jpg" />
             </Head>
 
-            <Navbar bg="dark" variant="dark" expand="lg">
+            <Navbar bg="dark" variant="dark">
                 <Navbar.Brand href="/">Home</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">

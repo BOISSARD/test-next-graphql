@@ -1,5 +1,8 @@
 import Master from "../components/master";
 
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+
 export default class RedditLayout extends React.Component {
 
 	constructor(props) {
@@ -10,11 +13,18 @@ export default class RedditLayout extends React.Component {
 
 	render() {
 		return (
-			<div className="container">
-				<div className="bg-white antialiased">
-					<Master list={this.list} />
-					<div className="mt-6 sm:mt-0 sm:py-12">{this.children}</div>
-				</div>
+			<div className="bg-white antialiased">
+				<Row>
+					<Col md="4" lg="3" className="d-md-block bg-light sidebar collapse">
+						<Master list={this.list} />
+					</Col>
+					<Col>
+						<div className="container">
+							{this.children}
+						</div>
+					</Col>
+				</Row>
+
 			</div>
 		)
 	}
