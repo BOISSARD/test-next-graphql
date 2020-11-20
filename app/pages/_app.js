@@ -9,7 +9,7 @@ export default function MyApp({Component, pageProps}) {
     return (
         <>
             <Head>
-            <title>Create Next App</title>
+            <title>Next Skill Test</title>
             <link rel="icon" href="/logo.jpg" />
             </Head>
 

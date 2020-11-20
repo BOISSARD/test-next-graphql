@@ -1,18 +1,12 @@
-import Head from 'next/head'
-import Form from 'react-bootstrap/Form'
+import RedditLayout from '../../layout/reddit'
+import Link from 'next/link'
 
 export default function Home() {
-  return (
-    <div className="container">
-
-      <main>
-        <h1 className="title">
-            /reddit/
-        </h1>
-
-        
-      </main>
-
-    </div>
-  )
+	return (
+		<RedditLayout>
+			<h1 className="title">
+				/reddit/
+      		</h1>
+		</RedditLayout>
+	)
 }
