@@ -2,8 +2,8 @@ const { gql } = require('apollo-server');
 
 const typeDefs = gql`
     type Query {
-        search(keyword: String): [Subreddit]
-        subreddit(name: String!, pageSize: Int, after: String): Subreddit 
+        search(keyword: String!, limit: Int, after: String): [Subreddit]
+        subreddit(name: String!, limit: Int, after: String): Subreddit 
         me: User
         favoris: [Subreddit]
     }
@@ -21,8 +21,13 @@ const typeDefs = gql`
     }
 
     type Subreddit {
+        id: ID!
         name: String!
-        link: String
+        date: Int
+        title: String
+        description: String
+        header: String
+        icon: String
         topics: [Topic]!
     }
 
