@@ -1,32 +1,78 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-//import 'bootstrap/dist/js/bootstrap.min.js'
 import Head from 'next/head'
-import Nav from 'react-bootstrap/Nav'
-import Navbar from 'react-bootstrap/Navbar'
-import Button from 'react-bootstrap/Button'
+import Link from 'next/link'
 
-export default function MyApp({Component, pageProps}) {
+import { fade, makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+
+const useStyles = makeStyles((theme) => ({
+    grow: {
+        flexGrow: 1,
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
+    search: {
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        borderColor: 'white',
+        borderRadius: theme.shape.borderRadius,
+        marginRight: theme.spacing(2),
+        marginLeft: theme.spacing(2),
+        color: 'white'
+    },
+    searchIcon: {
+        color: 'white'
+    }
+}));
+
+export default function MyApp({ Component, pageProps }) {
+    const classes = useStyles();
+
     return (
         <>
             <Head>
-            <title>Next Skill Test</title>
-            <link rel="icon" href="/logo.jpg" />
+                <title>Next Skill Test</title>
+                <link rel="icon" href="/logo.jpg" />
             </Head>
 
-            <Navbar bg="dark" variant="dark">
-                <Navbar.Brand href="/">Home</Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="mr-auto">
-                        <Nav.Link href="/reddit">Reddit</Nav.Link>
-                        <Nav.Link href="/reddit/search">Search</Nav.Link>
-                    </Nav>
-                    <Nav.Link href="/connexion"><Button variant="outline-light">Connection</Button></Nav.Link>
-                </Navbar.Collapse>
-            </Navbar>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton
+                        edge="start"
+                        className={classes.menuButton}
+                        color="inherit"
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Link href="/"><Button color="inherit"><Typography variant="h6" noWrap>Home</Typography></Button></Link>
+                    <Link href="/reddit"><Button color="inherit">Reddit</Button></Link>
+                    <form>
+                        <TextField
+                            variant="outlined"
+                            placeholder="Search subreddit…"
+                            size="small"
+                            className={classes.search}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <Link href="/reddit/search"><IconButton className={classes.searchIcon}><SearchIcon /></IconButton></Link>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </form>
+                </Toolbar>
+            </AppBar>
 
-            <Component {...pageProps}/>
-            
+            <Component {...pageProps} />
+
             <style jsx global>{`
                 html,
                 body {

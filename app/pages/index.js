@@ -1,28 +1,24 @@
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
 import Link from 'next/link'
 
+import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
+
+const useStyles = makeStyles({
+  accent: {
+    color: '#3f50b5'
+  },
+});
+
 export default function Home() {
+  const classes = useStyles();
   return (
     <div className="container">
-      <Container fluid className="text-center">
+      <Box justifyContent="center">
           <h1 className="title">
-            Welcome on this <span className="text-primary">skill TEST</span> !
+            Welcome on this <span className={classes.accent}>skill TEST</span> !
           </h1>
-
-          <Form.Row className="align-center">
-              <Col xs={3}></Col>
-              <Col xs={4}>
-                <Form.Control size="lg" placeholder="Search for a subreddit" />
-              </Col>
-              <Col xs={2}>
-                <Link href="/reddit/search"><Button block size="lg" variant="primary" type="submit">Search</Button></Link>
-              </Col>
-          </Form.Row>
-      </Container>
+      </Box >
 
       <style jsx>{`
       .container {

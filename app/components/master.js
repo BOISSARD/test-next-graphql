@@ -1,5 +1,9 @@
-import ListGroup from 'react-bootstrap/ListGroup'
-import Nav from 'react-bootstrap/Nav'
+
+import Link from 'next/link'
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import LinkUI from '@material-ui/core/Link';
 
 export default class Master extends React.Component {
 
@@ -12,12 +16,12 @@ export default class Master extends React.Component {
     render() {
         return (
             <div>
-                <Nav className="flex-column">
-                    <Nav.Link href="/reddit/r/test">test</Nav.Link>
-                    <Nav.Link href="/reddit/r/yolo">yolo</Nav.Link>
-                    <Nav.Link href="/reddit/r/lol">lol</Nav.Link>
-                    <Nav.Link href="/reddit/r/lolilol">lolilol</Nav.Link>
-                </Nav>
+                <List>
+                    <ListItem><Link href="/reddit/r/test"><LinkUI href="">test</LinkUI></Link></ListItem>
+                    <ListItem><Link href="/reddit/r/yolo"><LinkUI href="">yolo</LinkUI></Link></ListItem>
+                    <ListItem><Link href="/reddit/r/lol"><LinkUI href="">lol</LinkUI></Link></ListItem>
+                    <ListItem><Link href="/reddit/r/lolilol"><LinkUI href="">lolilol</LinkUI></Link></ListItem>
+                </List>
             </div>
         )
     }
