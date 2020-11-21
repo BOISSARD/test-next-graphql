@@ -19,9 +19,9 @@ class RedditAPI extends RESTDataSource {
         }
     }
 
-    async searchSubreddits({keyword, limit, after}) {
+    async searchSubreddits({keyword, limit, after}) { // sort one of (relevance, hot, top, new, comments)
         let keywordVal = keyword || ""
-        let limitVal = limit || 2
+        let limitVal = limit
         const response = await this.get(`search.json?q=${keywordVal}&limit=${limitVal}&type=sr`)
         //console.log(response.data.children)//this.subredditReducer(response[0]))
         let subs = response.data.children

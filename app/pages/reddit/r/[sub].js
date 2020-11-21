@@ -21,7 +21,7 @@ export default class Subreddit extends React.Component {
         const oldProps = this.props
         if(oldProps.sub !== newProps.sub) {
             this.setState({sub: newProps.sub})
-            console.log("componentWillReceiveProps", oldProps, "->", newProps, " = ", this.state.sub)
+            console.log("Subreddit componentWillReceiveProps", oldProps, "->", newProps, " = ", this.state.sub)
         }
     }
 
