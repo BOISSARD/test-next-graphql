@@ -1,79 +1,76 @@
 import Head from 'next/head'
 import Link from 'next/link'
+// import Router from 'next/router'
+import { useRouter } from 'next/router'
 
-import { fade, makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
+// import { useHistory, withRouter } from 'react-router-dom';
 
-const useStyles = makeStyles((theme) => ({
-    grow: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    search: {
-        backgroundColor: fade(theme.palette.common.white, 0.15),
-        borderColor: 'white',
-        borderRadius: theme.shape.borderRadius,
-        marginRight: theme.spacing(2),
-        marginLeft: theme.spacing(2),
-        color: 'white'
-    },
-    searchIcon: {
-        color: 'white'
+import 'bootstrap/dist/css/bootstrap.css';
+
+import Navbar from 'react-bootstrap/Navbar'
+import Nav from 'react-bootstrap/Nav'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
+import InputGroup from 'react-bootstrap/InputGroup'
+
+import { FaSearch } from 'react-icons/fa';
+
+var state = { subreddit: null }
+
+// class MyApp extends React.Component {
+// export default class MyApp extends React.Component {
+export default function MyApp({Component, pageProps}) {
+
+    /*constructor(props) {
+        super(props);
+        console.log("MyApp", props)
+        this.component = props.Component
+        this.pageProps = props.pageProps
+        this.state = { subreddit: null }
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }*/
+    const router = useRouter()
+
+    function handleSubmit(event) {
+        console.log("handleSubmit", event, state);
+        event.preventDefault();
+        //let history = useHistory();
+        //Router.push('/reddit/search')
+        // router.push('/reddit/search')
+        router.push(`/reddit/search/${!!state.subreddit? state.subreddit : ""}`)
     }
-}));
 
-export default function MyApp({ Component, pageProps }) {
-    const classes = useStyles();
+    //render() {
+        return (
+            <>
+                <Head>
+                    <title>Next Skill Test</title>
+                    <link rel="icon" href="/logo.jpg" />
+                </Head>
 
-    return (
-        <>
-            <Head>
-                <title>Next Skill Test</title>
-                <link rel="icon" href="/logo.jpg" />
-            </Head>
-
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                        edge="start"
-                        className={classes.menuButton}
-                        color="inherit"
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Link href="/"><Button color="inherit"><Typography variant="h6" noWrap>Home</Typography></Button></Link>
-                    <Link href="/reddit"><Button color="inherit">Reddit</Button></Link>
-                    <form>
-                        <TextField
-                            variant="outlined"
-                            placeholder="Search subreddit…"
-                            size="small"
-                            className={classes.search}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Link href="/reddit/search"><IconButton className={classes.searchIcon}><SearchIcon /></IconButton></Link>
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
+                <Navbar bg="primary">
+                    <Navbar.Brand className="ml-2"><Link href="/"><a className="h4 text-white">Home</a></Link></Navbar.Brand>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Nav className="mr-4">
+                    <Nav.Link ><Link href="/reddit"><span className="btn-link text-white">Reddit</span></Link></Nav.Link>
+                    </Nav>
+                    {/* <form className="mr-auto" onSubmit={this.handleSubmit}> */}
+                    <form className="mr-auto" onSubmit={handleSubmit}>
+                            <InputGroup>
+                                {/* <Form.Control placeholder="Search Subreddit" type="text" onChange={event => this.state.subreddit = event.target.value}/> */}
+                                <Form.Control placeholder="Search Subreddit" type="text" onChange={event => state.subreddit = event.target.value}/>
+                                <InputGroup.Append>
+                                    <Button variant="outline-light" type="submit"><FaSearch /></Button>
+                                </InputGroup.Append>
+                            </InputGroup>
                     </form>
-                </Toolbar>
-            </AppBar>
+                    <Link href="/login"><Button variant="outline-light" className="mr-2 px-4">Login</Button></Link>
+                </Navbar>
 
-            <Component {...pageProps} />
+                {/* <this.component {...this.pageProps} /> */}
+                <Component {...pageProps} />
 
-            <style jsx global>{`
+                <style jsx global>{`
                 html,
                 body {
                 padding: 0;
@@ -87,6 +84,9 @@ export default function MyApp({ Component, pageProps }) {
                 box-sizing: border-box;
                 }
             `}</style>
-        </>
-    )
+            </>
+        )
+    //}
 }
+
+// export default withRouter(MyApp);
