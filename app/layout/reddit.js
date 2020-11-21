@@ -15,33 +15,11 @@ export default class RedditLayout extends React.Component {
 		return (
 			<div className="container-fluid myContainer">
 				<Row className="heigh100">
-					{/* <Grid container spacing={3}>
-						<Grid item xs={3}>
-							<Master list={this.list} />
-						</Grid>
-						<Grid item xs={8}>
-							<Box justifyContent="center">
-								{this.children}
-							</Box >
-						</Grid>
-					</Grid> */}
-
-					{/* <Drawer
-						className={this.classes.drawer}
-						variant="permanent"
-						anchor="left"
-					>
-						<Master list={this.list} />
-					</Drawer>
-					<main className={this.classes.content}>
-						{this.children}
-					</main> */}
 					<Col xs={4} md={3} ><Master list={this.list} /></Col>
 					<Col>{this.children}</Col>
-
 				</Row>
 
-			<style jsx>{`
+				<style jsx>{`
 				.myContainer {
 					height: calc(100vh - 60px);
 					width: 100%;

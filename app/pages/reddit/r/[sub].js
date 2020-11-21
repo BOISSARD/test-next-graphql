@@ -1,55 +1,42 @@
-
-import React, { useState, useEffect } from 'react';
 //import Router from 'next/router'
 import { useRouter } from 'next/router'
 import RedditLayout from '../../../layout/reddit'
 
-// export default class Subreddit extends React.Component {
-export default function Subreddit(props) {
-    /*static async getInitialProps({query}) {
-        return query
-    }*/
-
-    /*static async getStaticProps() {
-        return {
-            paths: [
-                { params: { sub: ["*"] } },
-            ],
-            fallback: true
-        };
-    }*/
-
-    /*constructor(props) {
+export default class Subreddit extends React.Component {
+   
+    constructor(props) {
         super(props);
-        this.router = useRouter()
-        //const { pid } = router.query
         this.state = {
-            // sub: props.sub
-            sub: props.sub
+            //sub: props.sub
+            sub: "Vide"
         }
-        console.log("Subreddit", props, router, this.state)
-    }*/
-
-    const router = useRouter();
-    console.log(router.query) 
-    this.state = {
-        sub : router.query.sub
+        console.log("Subreddit", props, this.state)
     }
 
-    // render() {
+    componentWillReceiveProps(newProps) {
+        const oldProps = this.props
+        console.log("componentWillReceiveProps", oldProps, "=>", newProps)
+        if(oldProps.sub !== newProps.sub) {
+            console.log("avant setState", newProps.sub, this.state)
+            this.setState({sub: newProps.sub})
+            console.log("après setState", newProps.sub, this.state)
+        }
+    }
+
+    render() {
         return (
             <RedditLayout>
                 <h1 className="title">
-                    /reddit/r/ {router.query.sub}
+                    /reddit/r/{this.state.sub}
                     {/* {this.state.sub} */}
                 </h1>
             </RedditLayout>
         )
-    // }
+    }
 
 }
 
-/*export async function getStaticProps({ params }) {
+export async function getStaticProps({ params }) {
     return {
         props: params,
         //revalidate: 1,
@@ -64,4 +51,4 @@ export async function getStaticPaths() {
       ],
       fallback: true
     };
-}*/
+}
