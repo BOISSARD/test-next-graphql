@@ -1,14 +1,18 @@
-//import Router from 'next/router'
 import { useRouter } from 'next/router'
+
 import RedditLayout from '../../../layout/reddit'
+import Master from "../../../components/master";
+
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button';
 
 export default class Subreddit extends React.Component {
    
     constructor(props) {
         super(props);
         this.state = {
-            //sub: props.sub
-            sub: "Vide"
+            sub: props.sub,
         }
         console.log("Subreddit", props, this.state)
     }
@@ -25,11 +29,8 @@ export default class Subreddit extends React.Component {
 
     render() {
         return (
-            <RedditLayout>
-                <h1 className="title">
-                    /reddit/r/{this.state.sub}
-                    {/* {this.state.sub} */}
-                </h1>
+            <RedditLayout key={this.state.sub}>
+                <h1 className="title">/reddit/r/{this.state.sub}</h1>
             </RedditLayout>
         )
     }
