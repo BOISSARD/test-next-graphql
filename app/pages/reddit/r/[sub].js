@@ -19,11 +19,9 @@ export default class Subreddit extends React.Component {
 
     componentWillReceiveProps(newProps) {
         const oldProps = this.props
-        console.log("componentWillReceiveProps", oldProps, "=>", newProps)
         if(oldProps.sub !== newProps.sub) {
-            console.log("avant setState", newProps.sub, this.state)
             this.setState({sub: newProps.sub})
-            console.log("après setState", newProps.sub, this.state)
+            console.log("componentWillReceiveProps", oldProps, "->", newProps, " = ", this.state.sub)
         }
     }
 
@@ -38,6 +36,9 @@ export default class Subreddit extends React.Component {
 }
 
 export async function getStaticProps({ params }) {
+    /*const res = await fetch(`https://www.reddit.com/top.json`)
+    const data = await res.json()
+    console.log("getStaticProps", params, data)*/
     return {
         props: params,
         //revalidate: 1,

@@ -8,7 +8,7 @@ export default class RedditLayout extends React.Component {
 	constructor(props) {
 		super(props);
 		this.children = props.children
-		this.list = ["yolo", "test", "lol", "lolilol"]
+		this.list = ["Home", "gaming", "aww", "nexistepasenfinnormalement"]
 	}
 
 	render() {
