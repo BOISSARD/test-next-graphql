@@ -3,7 +3,7 @@ const { gql } = require('apollo-server');
 const typeDefs = gql`
     type Query {
         search(keyword: String!, limit: Int, sort: String, time: String, after: String): [Subreddit]
-        subreddit(name: String!, limit: Int, after: String): Subreddit 
+        subreddit(name: String!, limit: Int, sort: String, time: String, after: String): Subreddit 
         me: User
         favoris: [Subreddit]
     }
@@ -29,15 +29,25 @@ const typeDefs = gql`
         header: String
         icon: String
         color: String
-        topics: [Topic]!
+        publications: [Publication]!
     }
 
-    type Topic {
-        # date: Date
+    type Publication {
+        id: ID!
+        name: String,
+        date: Int
         title: String
         author: String
-        media: String
+        subreddit: String
+        media: Media
+        from: Publication
         comments: [Comment]!
+    }
+
+    type Media {
+        thumbnail: String
+        url: String
+        video: String
     }
 
     type Comment {

@@ -54,7 +54,6 @@ export default function SearchLayout(props) {
                         <option>25</option>
                         <option>50</option>
                         <option>100</option>
-                        <option>200</option>
                     </Form.Control>
                 </Col>
             </Row>
@@ -69,7 +68,6 @@ export default function SearchLayout(props) {
                             <option>25</option>
                             <option>50</option>
                             <option>100</option>
-                            <option>200</option>
                         </Form.Control>
                     </Form.Group>
                 </Col>
