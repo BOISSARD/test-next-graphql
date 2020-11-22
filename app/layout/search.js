@@ -11,10 +11,7 @@ export default class SearchLayout extends React.Component {
     constructor(props) {
         super(props);
         this.children = props.children
-        this.state = {
-            subreddit: props.subreddit
-        }
-        console.log("SearchLayout", props, this.state)
+        console.log("SearchLayout", props)
     }
 
     render() {

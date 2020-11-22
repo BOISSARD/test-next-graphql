@@ -7,7 +7,7 @@ export default class SubredditItem extends React.Component {
     constructor(props) {
         super(props);
         this.subreddit = props.subreddit
-        console.log("SubredditItem", this.subreddit)
+        //console.log("SubredditItem", this.subreddit)
     }
 
     render() {

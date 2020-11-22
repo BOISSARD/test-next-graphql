@@ -24,7 +24,7 @@ export default function SearchSubreddit(props) {
     const { loading, error, data, refetch, networkStatus } = useQuery(SUBREDDITS_SEARCH, {
         variables: { keyword: sub, limit: 10 },
     });
-    console.log("SearchSubreddit", props, sub)
+    //console.log("SearchSubreddit", props, sub)
 
     if (loading || networkStatus === NetworkStatus.refetch) return null;
     if (error) return `Error ! ${error}`;
@@ -44,8 +44,6 @@ export default function SearchSubreddit(props) {
 export async function getStaticProps({ params }) {
     return {
         props: params,
-        //revalidate: 1,
-        //key: params.sub
     }
 }
 
