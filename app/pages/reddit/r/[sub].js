@@ -7,32 +7,16 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button';
 
-export default class Subreddit extends React.Component {
+export default function Subreddit(props) {
    
-    constructor(props) {
-        super(props);
-        this.state = {
-            sub: props.sub,
-        }
-        console.log("Subreddit", props, this.state)
-    }
+    const router = useRouter()
+    let sub = props.sub
 
-    componentWillReceiveProps(newProps) {
-        const oldProps = this.props
-        if(oldProps.sub !== newProps.sub) {
-            this.setState({sub: newProps.sub})
-            console.log("Subreddit componentWillReceiveProps", oldProps, "->", newProps, " = ", this.state.sub)
-        }
-    }
-
-    render() {
-        return (
-            <RedditLayout key={this.state.sub}>
-                <h1 className="title">/reddit/r/{this.state.sub}</h1>
-            </RedditLayout>
-        )
-    }
-
+    return (
+        <RedditLayout key={sub}>
+            <h1 className="title">/reddit/r/{sub}</h1>
+        </RedditLayout>
+    )
 }
 
 export async function getStaticProps({ params }) {
