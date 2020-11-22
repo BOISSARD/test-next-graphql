@@ -11,7 +11,7 @@ export default class SearchDefault extends React.Component {
     render() {
         return (
             <SearchLayout>
-                <h2>Index</h2>
+                <h2>Nothing in search</h2>
             </SearchLayout>
         )
     }

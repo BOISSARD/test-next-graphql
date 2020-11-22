@@ -2,6 +2,7 @@ import Master from "../components/master";
 
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Container from 'react-bootstrap/Container'
 
 export default class RedditLayout extends React.Component {
 
@@ -14,9 +15,9 @@ export default class RedditLayout extends React.Component {
 	render() {
 		return (
 			<div className="container-fluid myContainer">
-				<Row className="heigh100">
-					<Col xs={4} md={3} ><Master list={this.list} /></Col>
-					<Col>{this.children}</Col>
+				<Row className="heigh100" noGutters>
+					<Col xs={12} md={3} style={{borderRight: "solid lightgrey 1px"}}><Master list={this.list} /></Col>
+					<Col><Container>{this.children}</Container></Col>
 				</Row>
 
 				<style jsx>{`

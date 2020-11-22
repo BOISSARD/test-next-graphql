@@ -10,18 +10,18 @@ export default function Home() {
 		</h1>
 
 		<style jsx>{`
-		.container {
-			height: calc(100vh - 100px);
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-		}
-		.title {
-			margin: 0 0 2rem 0;
-			line-height: 1.15;
-			font-size: 4rem;
-		}
+			.container {
+				height: calc(100vh - 100px);
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+			}
+			.title {
+				margin: 0 0 2rem 0;
+				line-height: 1.15;
+				font-size: 4rem;
+			}
 		`}</style>
 		</div>
 	)

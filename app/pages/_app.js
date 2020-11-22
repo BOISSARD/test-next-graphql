@@ -30,7 +30,7 @@ export default function MyApp({ Component, pageProps }) {
     const handleShow = () => setShow(true);
 
     function handleSubmit(event) {
-        console.log("handleSubmit", event, state);
+        //console.log("handleSubmit", event, state);
         event.preventDefault();
         router.push(`/reddit/search/${!!state.subreddit ? state.subreddit : ""}`)
     }
@@ -48,7 +48,6 @@ export default function MyApp({ Component, pageProps }) {
                 <Nav className="mr-4">
                     <Nav.Link ><Link href="/reddit"><span className="btn-link text-white">Reddit</span></Link></Nav.Link>
                 </Nav>
-                {/* <form className="mr-auto" onSubmit={this.handleSubmit}> */}
                 <form className="mr-auto" onSubmit={handleSubmit}>
                     <InputGroup>
                         {/* <Form.Control placeholder="Search Subreddit" type="text" onChange={event => this.state.subreddit = event.target.value}/> */}
@@ -78,19 +77,19 @@ export default function MyApp({ Component, pageProps }) {
             <Component {...pageProps} />
 
             <style jsx global>{`
-            html,
-            body {
-            padding: 0;
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-                Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-                sans-serif;
-            }
+                html,
+                body {
+                padding: 0;
+                margin: 0;
+                font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+                    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+                    sans-serif;
+                }
 
-            * {
-            box-sizing: border-box;
-            }
-        `}</style>
+                * {
+                box-sizing: border-box;
+                }
+            `}</style>
         </ApolloProvider>
     )
 }
