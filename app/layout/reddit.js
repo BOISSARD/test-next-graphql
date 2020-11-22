@@ -12,11 +12,12 @@ export default class RedditLayout extends React.Component {
 		this.list = ["Home", "gaming", "aww", "nexistepasenfinnormalement"]
 	}
 
+
 	render() {
 		return (
 			<div className="container-fluid myContainer">
-				<Row className="heigh100" noGutters>
-					<Col xs={12} md={3} style={{borderRight: "solid lightgrey 1px"}}><Master list={this.list} /></Col>
+				<Row style={{height: "100vh"}} noGutters>
+					<Col xs={12} md={3} style={{borderRight: "solid lightgrey 1px", overflowY: "scroll"}}><Master list={this.list}/></Col>
 					<Col><Container>{this.children}</Container></Col>
 				</Row>
 
@@ -29,8 +30,8 @@ export default class RedditLayout extends React.Component {
 					margin: 0;
 					padding: 0;
 				}
-				.heigh100 {
-					height: 100vh;
+				.scroll {
+					overflow-y: scroll
 				}
 			`}</style>
 			</div>

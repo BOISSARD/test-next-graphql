@@ -13,13 +13,12 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form'
 
 const SUBREDDITS_SEARCH = gql`
-    query search($keyword: String!, $limit: Int, $sort: String, $time: String) {
-        search(keyword: $keyword, limit: $limit, sort: $sort, time: $time) {
+    query search($keyword: String!, $limit: Int, $sort: String, $time: String, $after: String) {
+        search(keyword: $keyword, limit: $limit, sort: $sort, time: $time, after: $after) {
             id
             name
             title
             description
-            date
             header
             icon
             color
@@ -30,9 +29,13 @@ const SUBREDDITS_SEARCH = gql`
 export default function SearchSubreddit(props) {
     const router = useRouter()
     let sub = props.sub
-    console.log("SearchSubreddit", props, sub, Object.assign({ keyword: sub}, router.query))
+    let variables = Object.assign({ keyword: sub}, router.query)
+    if(variables.limit)
+        variables.limit = parseInt(variables.limit)
+    delete variables.sub
+    //console.log("SearchSubreddit", props, sub, variables)
     const { loading, error, data, refetch, networkStatus } = useQuery(SUBREDDITS_SEARCH, {
-        variables: Object.assign({ keyword: sub}, /*router.query*/)
+        variables: variables //{ keyword: sub }//variables
     });
 
     if (error || loading || networkStatus === NetworkStatus.refetch) return null;

@@ -13,7 +13,7 @@ export default function SearchLayout(props) {
     var formVal = router.query
     var sub = formVal.sub
     delete formVal.sub
-    console.log("SearchLayout", props, formVal)
+    //console.log("SearchLayout", props, formVal)
     let children = props.children
 
     function handleLimitChange(event) {
@@ -43,11 +43,27 @@ export default function SearchLayout(props) {
             <h1 className="title">
                 /reddit/search
             </h1>
-            <Row>
+            <Row className="align-items-center">
+                <Col xs={"auto"}>
+                    <Form.Label>Limit by pages to</Form.Label>
+                </Col>
+                <Col xs={"auto"}>
+                    <Form.Control as="select" value={formVal.limit || 25} onChange={handleLimitChange} placeholder="Limit">
+                        <option>5</option>
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                        <option>100</option>
+                        <option>200</option>
+                    </Form.Control>
+                </Col>
+            </Row>
+            {/* <Row>
                 <Col>
                     <Form.Group>
-                        <Form.Label>Limit to</Form.Label>
-                        <Form.Control as="select" value={formVal.limit || 10} onChange={handleLimitChange} placeholder="Limit">
+                        <Form.Label>Limit by pages to</Form.Label>
+                        <Form.Control as="select" value={formVal.limit} onChange={handleLimitChange} placeholder="Limit">
+                            <option></option>
                             <option>5</option>
                             <option>10</option>
                             <option>25</option>
@@ -82,9 +98,11 @@ export default function SearchLayout(props) {
                         </Form.Control>
                     </Form.Group>
                 </Col>
-            </Row>
-            {children}
-            {/* {this.children} */}
+            </Row> */}
+            {/* <div style={{overflowY: "scroll"}}> */}
+                {children}
+                {/* {this.children} */}
+            {/* </div> */}
         </RedditLayout>
     )
 }

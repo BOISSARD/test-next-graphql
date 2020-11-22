@@ -32,7 +32,16 @@ export default function MyApp({ Component, pageProps }) {
     function handleSubmit(event) {
         //console.log("handleSubmit", event, state);
         event.preventDefault();
-        router.push(`/reddit/search/${!!state.subreddit ? state.subreddit : ""}`)
+        var formVal = router.query
+        delete formVal.sub
+        //console.log("handleSubmit", event, state, router);
+        if(router.pathname !== "/reddit/search/[sub]" || !state.subreddit)
+            router.push(`/reddit/search/${!!state.subreddit ? state.subreddit : ""}`)
+        else
+            router.push({
+                pathname: `/reddit/search/${state.subreddit}`,
+                search: "?" + new URLSearchParams(Object.assign({}, formVal)).toString()
+            })
     }
 
     return (
@@ -42,7 +51,7 @@ export default function MyApp({ Component, pageProps }) {
                 <link rel="icon" href="/logo.jpg" />
             </Head>
 
-            <Navbar bg="primary">
+            <Navbar bg="primary" fixed="top">
                 <Navbar.Brand className="ml-2"><Link href="/"><a className="h4 text-white">Home</a></Link></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Nav className="mr-4">
@@ -73,8 +82,10 @@ export default function MyApp({ Component, pageProps }) {
                 </Modal.Footer>
             </Modal>
 
-            {/* <this.component {...this.pageProps} /> */}
-            <Component {...pageProps} />
+            <div className="custom-container">
+                {/* <this.component {...this.pageProps} /> */}
+                <Component {...pageProps} />
+            </div>
 
             <style jsx global>{`
                 html,
@@ -89,7 +100,23 @@ export default function MyApp({ Component, pageProps }) {
                 * {
                 box-sizing: border-box;
                 }
+
+                .custom-container {
+                    display: block;
+                    position absolute;
+                    top: 57px;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
             `}</style>
+            
+
         </ApolloProvider>
     )
 }

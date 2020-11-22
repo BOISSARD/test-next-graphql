@@ -25,10 +25,12 @@ class RedditAPI extends RESTDataSource {
         let limitVal = limit
         let sortVal = sort
         let timeVal = time
-        console.log(`search.json?q=${keywordVal}&type=sr${limitVal && '&limit='+limitVal  || ""}${sortVal && '&sort='+sortVal || ""}${timeVal && '&t='+timeVal || ""}`)
-        const response = await this.get(`search.json?q=${keywordVal}&type=sr${limitVal && '&limit='+limitVal}${sortVal && '&sort='+sortVal}${timeVal && '&t='+timeVal}`)
-        //console.log(response.data.children)//this.subredditReducer(response[0]))
+        console.log(keyword, limit, sort, time)
+        let url = `search.json?q=${keywordVal}&type=sr${limitVal && '&limit='+limitVal  || ""}${sortVal && '&sort='+sortVal || ""}${timeVal && '&t='+timeVal || ""}`
+        console.log(url)
+        const response = await this.get(url)
         let subs = response.data.children
+        //console.log(subs.length, subs[0].data.display_name, this.subredditReducer(subs[0].data))
         return Array.isArray(subs) ? subs.map(sub => this.subredditReducer(sub.data)) : [];
     }
 }
