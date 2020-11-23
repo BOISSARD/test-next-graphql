@@ -46,6 +46,8 @@ const typeDefs = gql`
         subreddit: String
         media: Media
         text: String
+        ups: Int
+        ups_ratio: Float
         from: Publication
         comments: [Comment]!
     }

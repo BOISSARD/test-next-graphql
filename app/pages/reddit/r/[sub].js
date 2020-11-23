@@ -37,6 +37,8 @@ const GET_SUBREDDIT = gql`
                 title
                 author
                 subreddit 
+                ups
+                ups_ratio
                 media {
                     url    
                     url_type
@@ -44,20 +46,6 @@ const GET_SUBREDDIT = gql`
                     video
                 }
                 text
-                from {
-                    id
-                    name
-                    date
-                    title
-                    author
-                    subreddit 
-                    media { 
-                        url    
-                        url_type
-                        thumbnail
-                        video
-                    }
-                }
                 comments {
                     id
                 }

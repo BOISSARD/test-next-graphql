@@ -6,9 +6,10 @@ import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
-import Button from 'react-bootstrap/Button'
+import Badge from 'react-bootstrap/Badge'
 import { Player } from 'video-react';
 import 'video-react/dist/video-react.css';
+import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
 
 export default class PublicationItem extends React.Component {
 
@@ -66,6 +67,12 @@ export default class PublicationItem extends React.Component {
                         <Row>
                             <Col>
                                 <Card.Text>{moment(this.publication.date * 1000).format('DD/MM/YYYY hh:mm:ss')}</Card.Text>
+                            </Col>
+                            <Col xs={"auto"}>
+                                <Badge variant={this.publication.ups_ratio >= 0.5 ? 'success' : 'danger'}>
+                                    <span className="mr-1">{Math.round(this.publication.ups)}</span>
+                                    {this.publication.ups_ratio >= 0.5 ? <FaThumbsUp/> : <FaThumbsDown />}
+                                </Badge>
                             </Col>
                             {this.publication.from &&
                                 <Col xs={"auto"}>

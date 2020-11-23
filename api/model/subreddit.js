@@ -32,10 +32,12 @@ class RedditAPI extends RESTDataSource {
         return {
             id: publi.id,
             name: publi.name,
-            date: publi.created,
+            date: publi.created_utc,
             title: publi.title,
             author: publi.name,
             subreddit: publi.subreddit,
+            ups: publi.ups,
+            ups_ratio: publi.upvote_ratio,
             media: {
                 url: publi.url,
                 url_type: publi.post_hint,
@@ -61,7 +63,7 @@ class RedditAPI extends RESTDataSource {
         let nameVal = name || ""
         const response = await this.get(`r/${name}/about.json?`)
         if(response.kind !== "t5") return null
-        let url = `r/${name}.json?${limit && '&limit='+limit  || ""}${sort && '&sort='+sort || ""}${time && '&t='+time || ""}`
+        let url = `r/${name}${sort && '/'+sort || ""}.json?${limit && '&limit='+limit  || ""}${time && '&t='+time || ""}`
         console.log(url)
         const response2 = await this.get(url)
         response.data.publications = response2.data.children
