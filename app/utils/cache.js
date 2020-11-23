@@ -1,4 +1,4 @@
-import { InMemoryCache, Reference, makeVar } from '@apollo/client';
+import { InMemoryCache, useApolloClient, makeVar } from '@apollo/client';
 
 export const cache = new InMemoryCache({
     typePolicies: {
@@ -8,10 +8,15 @@ export const cache = new InMemoryCache({
                     read() {
                         return isLoggedInVar();
                     },
-                    merge(_, incoming) {
+                    /*merge(_, incoming) {
+                        console.log("merge isLoggedIn", _, incoming)
+                        useApolloClient().cache.evict({ fieldName: "me" })
+                        useApolloClient().cache.gc()
+                        localStorage.removeItem('token')
+                        localStorage.removeItem('userId')
                         isLoggedInVar(incoming)
                         return isLoggedInVar()
-                    }
+                    }*/
                 },
                 favourites: {
                     read() {
@@ -37,5 +42,4 @@ export const cache = new InMemoryCache({
 });
 
 export const isLoggedInVar = makeVar(typeof window !== 'undefined' ? !!localStorage.getItem('token') : false);
-console.log("CACHE isLoggedInVar", isLoggedInVar, typeof window !== 'undefined' ? localStorage.getItem('token') : null)
 export const favouritesVar = makeVar([]);

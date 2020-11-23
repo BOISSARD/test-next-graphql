@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 
 import LoginModal from '../components/login-modal'
-import { isLoggedInVar } from '../utils/cache';
+import { isLoggedInVar, favouritesVar } from '../utils/cache';
 
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
@@ -16,6 +16,19 @@ import { FaSearch } from 'react-icons/fa';
 const IS_LOGGED_IN = gql`
     query IsUserLoggedIn {
         isLoggedIn @client
+    }
+`;
+
+const ME = gql`
+    query me {
+        me {
+            id
+            email
+            token
+            favourites {
+                name
+            }
+        }
     }
 `;
 
@@ -50,6 +63,16 @@ export default function Defaultlayout(props) {
         localStorage.removeItem('token')
         localStorage.removeItem('userId')
         isLoggedInVar(false)
+        favouritesVar([])
+    }
+
+    if(data.isLoggedIn){
+        console.log("Defaultlayout data", data)
+    }
+
+    let meData = useQuery(ME).data
+    if(meData && meData.me && meData.me.favourites && meData.me.favourites.length) {
+        favouritesVar(meData.me.favourites)
     }
 
     return (

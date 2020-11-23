@@ -21,8 +21,15 @@ class UserAPI extends DataSource {
         const favourites = await this.store.favourites.findAll({ where: { userId: users[0].id } });
         const user = users[0].get()
         user.favourites = favourites.map(favourite => favourite.get())
-        console.log(user)
+        //console.log(user)
         return user
+    }
+
+    async getFavourites() {
+        const userId = this.context.user ? this.context.user.id : null
+        console.log("UserAPI getFavourites", userId)
+        if(!userId) return []
+        return await this.store.favourites.findAll({ where: { userId } });
     }
   
     async addFavourite({name}) {
@@ -32,7 +39,7 @@ class UserAPI extends DataSource {
         const res = await this.store.favourites.findOrCreate({
             where: { userId, name },
         });
-        console.log("addFavourite", name, userId, "\nrésultat :", res && res.length && !!res[0].get())
+        //console.log("addFavourite", name, userId, "\nrésultat :", res && res.length && !!res[0].get())
         return res && res.length && !!res[0].get()
     }
   

@@ -1,10 +1,16 @@
-import { ApolloProvider, ApolloClient, gql } from '@apollo/client';
+import { ApolloProvider, ApolloClient, gql, useQuery } from '@apollo/client';
 import Head from 'next/head'
-import { cache } from '../utils/cache';
+
+import DefaultLayout from '../layout/default'
+import { cache, isLoggedInVar, favouritesVar } from '../utils/cache';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
-import DefaultLayout from '../layout/default'
+const IS_LOGGED_IN = gql`
+    query IsUserLoggedIn {
+        isLoggedIn @client
+    }
+`;
 
 export default function MyApp({ Component, pageProps }) {
 
@@ -25,7 +31,7 @@ export default function MyApp({ Component, pageProps }) {
     return (
         <ApolloProvider client={client}>
             <Head>
-                <title>Next Skill Test</title>
+                <title>Next & Graphql Skill Test</title>
                 <link rel="icon" href="/logo.jpg" />
             </Head>
 

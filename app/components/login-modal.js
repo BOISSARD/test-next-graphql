@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { gql, useMutation } from '@apollo/client';
 
-import { isLoggedInVar } from '../utils/cache';
+import { isLoggedInVar, favouritesVar } from '../utils/cache';
 
 import Modal from 'react-bootstrap/Modal'
 import Row from 'react-bootstrap/Row'
@@ -25,6 +25,12 @@ export const USER_LOGIN = gql`
     }
 `;
 
+export const SET_FAVOURITES = gql`
+	query SetFavorites {
+		favourites @client
+    }
+`
+
 //let firstTry = true
 
 export default function LoginModal(props) {
@@ -37,18 +43,12 @@ export default function LoginModal(props) {
             isLoggedInVar(true)
             handleClose()
         },
-        /*update(cache, { data }) {
+        update(cache, { data }) {
             console.log("update", cache, data.login)
             if(data.login && data.login.id) {
-                cache.write({
-                    query,
-                    data
-                })
-                console.log("update", cache.read({
-                    query
-                }))
+                favouritesVar(data.login.favourites)
             }
-        }*/
+        }
     });
     const [email, setEmail] = useState(null);
     // let email = null

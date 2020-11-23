@@ -3,6 +3,7 @@ module.exports = {
         search: (_, { keyword, limit, sort, time, after }, { dataSources }) => dataSources.redditAPI.searchSubreddits({ keyword: keyword, limit: limit, sort: sort, time: time, after: after }),
         subreddit: (_, { name, limit, sort, time, after }, { dataSources }) => dataSources.redditAPI.subreddit({ name: name, limit: limit, sort: sort, time: time, after: after }),
         me: (_, __, { dataSources }) => dataSources.userAPI.findOrCreateUser(),
+        favourites: (_, __, { dataSources }) => dataSources.userAPI.getFavourites(),
     },
     Mutation: {
         login: async (_, { email }, { dataSources }) => {
