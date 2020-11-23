@@ -17,8 +17,8 @@ export default class RedditLayout extends React.Component {
 		return (
 			<div className="container-fluid myContainer">
 				<Row style={{height: "100vh"}} noGutters>
-					<Col xs={12} md={3} style={{borderRight: "solid lightgrey 1px", overflowY: "scroll"}}><Master list={this.list}/></Col>
-					<Col><Container>{this.children}</Container></Col>
+					<Col xs={12} md={3} xl={2} style={{borderRight: "solid lightgrey 1px", overflowY: "scroll"}}><Master list={this.list}/></Col>
+					<Col xs={12} md={9} xl={10}><Container>{this.children}</Container></Col>
 				</Row>
 
 				<style jsx>{`

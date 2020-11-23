@@ -10,14 +10,19 @@ class RedditAPI extends RESTDataSource {
     subredditReducer(subreddit){
         let sub = subreddit.data || subreddit
         return {
-            id: sub.id || 0,
-            name: sub.display_name || "",
+            id: sub.id || -1,
+            name: sub.display_name,
             date: sub.created_utc,
             title: sub.title,
             description: sub.public_description, // public_description_html
             header: sub.banner_img,
+            header_text: sub.header_title,
             icon: sub.icon_img,
             color: sub.primary_color,
+            type: sub.subreddit_type,
+            category: sub.content_category,
+            over18: sub.over18,
+            subscribers: sub.subscribers,
             publications: sub.publications ? sub.publications.map(publi => this.publicationReducer(publi)) : []
         }
     }
@@ -25,17 +30,20 @@ class RedditAPI extends RESTDataSource {
     publicationReducer(publication){
         let publi = publication.data || publication
         return {
-            id: publi.id || 0,
+            id: publi.id,
             name: publi.name,
             date: publi.created,
             title: publi.title,
             author: publi.name,
             subreddit: publi.subreddit,
             media: {
-                thumbnail: publi.thumbnail,
                 url: publi.url,
-                video: publi.preview && publi.preview.reddit_video_preview ? publi.preview.reddit_video_preview.fallback_url : null
+                url_type: publi.post_hint,
+                thumbnail: publi.thumbnail,
+                // video: publi.preview && publi.preview.reddit_video_preview ? publi.preview.reddit_video_preview.fallback_url : null
+                video: publi.secure_media && publi.secure_media.reddit_video ? publi.secure_media.reddit_video.fallback_url : publi.preview && publi.preview.reddit_video_preview ? publi.preview.reddit_video_preview.fallback_url : null
             },
+            text: publi.selftext_html,
             from: publi.crosspost_parent_list && publi.crosspost_parent_list.length > 0 ? this.publicationReducer(publi.crosspost_parent_list[0]) : null,
             comments: []
         }
@@ -51,12 +59,15 @@ class RedditAPI extends RESTDataSource {
 
     async subreddit({name, limit, sort, time, after}) { // sort one of (relevance, hot, top, new, comments)
         let nameVal = name || ""
-        console.log(name, limit, sort, time)
         const response = await this.get(`r/${name}/about.json?`)
+        if(response.kind !== "t5") return null
         let url = `r/${name}.json?${limit && '&limit='+limit  || ""}${sort && '&sort='+sort || ""}${time && '&t='+time || ""}`
         console.log(url)
         const response2 = await this.get(url)
         response.data.publications = response2.data.children
+        /*response.data.publications.forEach(publi => {
+            console.log(public.id)
+        });*/
         return this.subredditReducer(response)
     }
 

@@ -22,13 +22,18 @@ const typeDefs = gql`
 
     type Subreddit {
         id: ID!
-        name: String!
+        name: String
         date: Int
         title: String
         description: String
         header: String
+        header_text: String
         icon: String
         color: String
+        type: String
+        category: String
+        over18: Boolean
+        subscribers: Int
         publications: [Publication]!
     }
 
@@ -40,13 +45,15 @@ const typeDefs = gql`
         author: String
         subreddit: String
         media: Media
+        text: String
         from: Publication
         comments: [Comment]!
     }
 
     type Media {
-        thumbnail: String
         url: String
+        url_type: String
+        thumbnail: String
         video: String
     }
 

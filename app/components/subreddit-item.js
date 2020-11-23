@@ -6,8 +6,6 @@ import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
 import Button from 'react-bootstrap/Button'
 
-import moment from 'moment'
-
 export default class SubredditItem extends React.Component {
 
     constructor(props) {
@@ -32,7 +30,7 @@ export default class SubredditItem extends React.Component {
                                 {!!this.subreddit.header &&
                                     <img src={this.subreddit.icon} className="header-icon-img mr-4" />
                                 }
-                                <h4 className="header-titleee">{this.subreddit.name}</h4>
+                                <h4 className="header-title">{this.subreddit.name}</h4>
                             </Col>
                             <Col xs={"auto"}>
                                 <Link href={`/reddit/r/${this.subreddit.name}`}><Button href={`/reddit/r/${this.subreddit.name}`} variant="outline-light" className="px-5">Link</Button></Link>
@@ -68,7 +66,7 @@ export default class SubredditItem extends React.Component {
                         max-height: 80px;
                         border-radius: 100%;
                     }
-                    .header-titleee {
+                    .header-title {
                         display: inline-block;
                     }
                 `}</style>

@@ -40,9 +40,6 @@ export default function SearchLayout(props) {
     
     return (
         <RedditLayout>
-            <h1 className="title">
-                /reddit/search
-            </h1>
             <Row className="align-items-center">
                 <Col xs={"auto"}>
                     <Form.Label>Limit by pages to</Form.Label>
