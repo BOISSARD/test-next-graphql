@@ -131,7 +131,7 @@ export default function Subreddit(props) {
 
     if (loading || networkStatus === NetworkStatus.refetch) return loadingMessage;
     if (error) return (
-        <RedditLayout key={props.sub}>
+        <RedditLayout key={props.sub + !!error}>
             <Row><Col></Col><Col xs={"auto"}><br /><br /><h4>Error !</h4></Col><Col></Col></Row>
             <Row><Col></Col><Col xs={"auto"}><br /><br /><h4>{`${error}`}</h4></Col><Col></Col></Row>
         </RedditLayout>

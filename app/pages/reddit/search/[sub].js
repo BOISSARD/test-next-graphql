@@ -35,32 +35,31 @@ export default function SearchSubreddit(props) {
         variables.limit = parseInt(variables.limit)
     delete variables.sub
 
-    let loadingMessage = <Row><Col></Col><Col><br /><br /><h4>Loading...</h4></Col><Col></Col></Row>
-
     const { loading, error, data, refetch, networkStatus } = useQuery(SEARCH_SUBREDDITS, {
         variables: variables //{ keyword: sub }//variables
     });
 
-    let content = null
+    let loadingMessage = <SearchLayout key={props.sub + loading}><Row><Col></Col><Col><br /><br /><h4>Loading...</h4></Col><Col></Col></Row></SearchLayout>
+    // let content = null
 
     if (loading || networkStatus === NetworkStatus.refetch) return loadingMessage;
     if (error) return (
-        <div>
-        <Row><Col></Col><Col><br /><br /><h4>Error !</h4></Col><Col></Col></Row>
-        <Row><Col></Col><Col xs={"auto"}><br /><br /><h4>{error}</h4></Col><Col></Col></Row>
-        </div>
+        <SearchLayout key={props.sub + !!error}>
+        <Row><Col></Col><Col xs={"auto"}><br /><br /><h4>Error !</h4></Col><Col></Col></Row>
+        <Row><Col></Col><Col xs={"auto"}><br /><br /><h4>{`${error}`}</h4></Col><Col></Col></Row>
+        </SearchLayout>
     )
-    //console.log("data", data, data && data.search.length)
-    if(data && data.search) 
-        content = (
-            <Row>
-                {data.search.map(sub => (
-                    <Col xs={12} key={sub.id}>
-                        <SubredditItem subreddit={sub}/>
-                    </Col>
-                ))}
-            </Row>
-    )
+    console.log("data", data, data && data.search.length)
+    // if(data && data.search) 
+    //     content = (
+    //         <Row>
+    //             {data.search.map(sub => (
+    //                 <Col xs={12} key={sub.id}>
+    //                     <SubredditItem subreddit={sub}/>
+    //                 </Col>
+    //             ))}
+    //         </Row>
+    // )
 
     return (
         <SearchLayout key={sub}>

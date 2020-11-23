@@ -13,6 +13,8 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Modal from 'react-bootstrap/Modal'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import { FaSearch } from 'react-icons/fa';
 
 var state = { subreddit: null }
@@ -26,6 +28,8 @@ export default function MyApp({ Component, pageProps }) {
     });
 
     const [show, setShow] = useState(false);
+    const [subreddit, setSubreddit] = useState(null);
+    const [email, setEmail] = useState(null);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -34,14 +38,19 @@ export default function MyApp({ Component, pageProps }) {
         event.preventDefault();
         var formVal = router.query
         delete formVal.sub
-        //console.log("handleSubmit", event, state, router);
-        if(router.pathname !== "/reddit/search/[sub]" || !state.subreddit)
-            router.push(`/reddit/search/${!!state.subreddit ? state.subreddit : ""}`)
+        console.log("handleSubmit", event, state, router);
+        if(router.pathname !== "/reddit/search/[sub]" || !subreddit)
+            router.push(`/reddit/search/${!!subreddit ? subreddit : ""}`)
         else
             router.push({
-                pathname: `/reddit/search/${state.subreddit}`,
+                pathname: `/reddit/search/${subreddit}`,
                 search: "?" + new URLSearchParams(Object.assign({}, formVal)).toString()
             })
+    }
+
+    function handleLogin(event) {
+        event.preventDefault();
+        console.log("handleLogin", event.target.value)
     }
 
     return (
@@ -59,8 +68,8 @@ export default function MyApp({ Component, pageProps }) {
                 </Nav>
                 <form className="mr-auto" onSubmit={handleSubmit}>
                     <InputGroup>
-                        {/* <Form.Control placeholder="Search Subreddit" type="text" onChange={event => this.state.subreddit = event.target.value}/> */}
-                        <Form.Control placeholder="Search Subreddit" type="text" onChange={event => state.subreddit = event.target.value} />
+                        {/* <Form.Control placeholder="Search Subreddit" type="text" onChange={event => this.subreddit = event.target.value}/> */}
+                        <Form.Control placeholder="Search Subreddit" type="text" onChange={event => setSubreddit(event.target.value)} />
                         <InputGroup.Append>
                             <Button variant="outline-light" type="submit"><FaSearch /></Button>
                         </InputGroup.Append>
@@ -74,11 +83,25 @@ export default function MyApp({ Component, pageProps }) {
                     <Modal.Title>Login</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-
+                    <Form inline onSubmit={handleLogin}>
+                        <Row className="align-items-center">
+                            <Col xs={4}>
+                                <Form.Label htmlFor="emailInput">Email :</Form.Label>
+                            </Col>
+                            <Col xs={4}>
+                        <Form.Control
+                            className="mb-2 mr-sm-2"
+                            id="emailInput"
+                            placeholder="Email address"
+                            onChange={event => state.email = event.target.value}
+                        />
+                            </Col>
+                        </Row>
+                    </Form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="danger" onClick={handleClose}>Cancel</Button>
-                    <Button variant="success" onClick={handleClose}>Login</Button>
+                    <Button variant="success" onClick={handleLogin}>Login</Button>
                 </Modal.Footer>
             </Modal>
 

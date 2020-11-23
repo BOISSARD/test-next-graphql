@@ -66,6 +66,7 @@ class RedditAPI extends RESTDataSource {
         let keywordVal = keyword || ""
         const response = await this.get(`search.json?q=${keywordVal}&type=sr${limit && '&limit='+limit  || ""}${sort && '&sort='+sort || ""}${time && '&t='+time || ""}`)
         let subs = response.data.children
+        console.log("searchSubreddits", keyword, limit, sort, time, after, subs && subs.length)
         return Array.isArray(subs) ? subs.map(sub => this.subredditReducer(sub)) : [];
     }
 
@@ -76,12 +77,10 @@ class RedditAPI extends RESTDataSource {
         if(response.kind !== "t5") return null
         const response2 = await this.get(`r/${name}${sort && '/'+sort || ""}.json?${limit && '&limit='+limit  || ""}${time && '&t='+time || ""}`)
         response.data.publications = response2.data.children
+        console.log("searchSubreddits", nameVal, limit, sort, time, after, response.data.publications && response.data.publications.length)
         for(const publi of response.data.publications) {
-            // limit=3&depth=1 pour avoir uniquement 3 commentaires sans réponses
-            let url = `r/${name}/comments/${publi.data.id}.json?limit=10&depth=3` 
-            let pResponse = await this.get(url)
+            let pResponse = await this.get(`r/${name}/comments/${publi.data.id}.json?limit=10&depth=3`)
             publi.data.comments = pResponse[1].data.children.slice(0, -1)
-            //console.log(publi.data.name, url, pResponse[1].data.children.length, publi.data.comments.length)
         }
         return this.subredditReducer(response)
     }
