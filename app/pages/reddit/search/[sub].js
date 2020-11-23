@@ -28,15 +28,14 @@ const SEARCH_SUBREDDITS = gql`
 
 export default function SearchSubreddit(props) {
     const router = useRouter()
-    let sub = props.sub
 
-    let variables = Object.assign({ keyword: sub}, router.query)
+    let variables = Object.assign({ keyword: props.sub}, router.query)
     if(variables.limit)
         variables.limit = parseInt(variables.limit)
     delete variables.sub
 
     const { loading, error, data, refetch, networkStatus } = useQuery(SEARCH_SUBREDDITS, {
-        variables: variables //{ keyword: sub }//variables
+        variables: variables //{ keyword: props.sub }//variables
     });
 
     let loadingMessage = <SearchLayout key={props.sub + loading}><Row><Col></Col><Col><br /><br /><h4>Loading...</h4></Col><Col></Col></Row></SearchLayout>
@@ -49,7 +48,7 @@ export default function SearchSubreddit(props) {
         <Row><Col></Col><Col xs={"auto"}><br /><br /><h4>{`${error}`}</h4></Col><Col></Col></Row>
         </SearchLayout>
     )
-    console.log("data", data, data && data.search.length)
+    //console.log("data", data, data && data.search.length)
     // if(data && data.search) 
     //     content = (
     //         <Row>
@@ -62,8 +61,8 @@ export default function SearchSubreddit(props) {
     // )
 
     return (
-        <SearchLayout key={sub}>
-            <h2>Search for "{sub}", {data.search.length} found</h2>
+        <SearchLayout key={props.sub}>
+            <h2>Search for "{props.sub}", {data.search.length} found</h2>
             {/* {content} */}
             <Row>
                 {data.search.map(sub => (
