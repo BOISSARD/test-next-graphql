@@ -34,7 +34,7 @@ class RedditAPI extends RESTDataSource {
             name: publi.name,
             date: publi.created_utc,
             title: publi.title,
-            author: publi.name,
+            author: publi.author,
             subreddit: publi.subreddit,
             ups: publi.ups,
             ups_ratio: publi.upvote_ratio,
@@ -42,7 +42,6 @@ class RedditAPI extends RESTDataSource {
                 url: publi.url,
                 url_type: publi.post_hint,
                 thumbnail: publi.thumbnail,
-                // video: publi.preview && publi.preview.reddit_video_preview ? publi.preview.reddit_video_preview.fallback_url : null
                 video: publi.secure_media && publi.secure_media.reddit_video ? publi.secure_media.reddit_video.fallback_url : publi.preview && publi.preview.reddit_video_preview ? publi.preview.reddit_video_preview.fallback_url : null
             },
             text: publi.selftext_html,
@@ -59,7 +58,7 @@ class RedditAPI extends RESTDataSource {
             author: comm.author,
             date: comm.created_utc,
             ups: comm.ups,
-            //replies: []//publi.comments ? publi.comments.map(rep => this.publicationReducer(rep)) : []
+            replies: comm.replies && comm.replies.data && comm.replies.data.children ? comm.replies.data.children.map(rep => this.commentReducer(rep)) : []
         }
     }
 
@@ -77,14 +76,12 @@ class RedditAPI extends RESTDataSource {
         if(response.kind !== "t5") return null
         const response2 = await this.get(`r/${name}${sort && '/'+sort || ""}.json?${limit && '&limit='+limit  || ""}${time && '&t='+time || ""}`)
         response.data.publications = response2.data.children
-        // response.data.publications.forEach(publi => {
         for(const publi of response.data.publications) {
             // limit=3&depth=1 pour avoir uniquement 3 commentaires sans réponses
-            let url = `r/${name}/comments/${publi.data.id}.json?limit=3&depth=1` 
+            let url = `r/${name}/comments/${publi.data.id}.json?limit=10&depth=3` 
             let pResponse = await this.get(url)
             publi.data.comments = pResponse[1].data.children.slice(0, -1)
-            console.log(publi.data.id, url, pResponse[1].data.children.length, publi.data.comments.length)
-        // });
+            //console.log(publi.data.name, url, pResponse[1].data.children.length, publi.data.comments.length)
         }
         return this.subredditReducer(response)
     }

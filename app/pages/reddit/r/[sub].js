@@ -52,6 +52,13 @@ const GET_SUBREDDIT = gql`
                     author
                     date
                     ups
+                    replies {
+                        id
+                        message
+                        author
+                        date
+                        ups
+                    }
                 }
             }
         }

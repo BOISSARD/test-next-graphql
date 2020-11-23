@@ -9,8 +9,11 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
 import Badge from 'react-bootstrap/Badge'
+import Button from 'react-bootstrap/Button'
+import Collapse from 'react-bootstrap/Collapse'
 import { Player } from 'video-react';
 import 'video-react/dist/video-react.css';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
 
 export default class PublicationItem extends React.Component {
@@ -20,6 +23,9 @@ export default class PublicationItem extends React.Component {
         this.publication = props.publication
         this.index = props.index
         this.entities = new AllHtmlEntities()
+        this.state = {
+            expand: false
+        }
         // console.log("PublicationItem", this.publication)
     }
 
@@ -29,6 +35,7 @@ export default class PublicationItem extends React.Component {
                     <Card.Header>
                         {/* {this.index} */}
                         <Card.Title className="h6">{this.publication.title}</Card.Title>
+                        <Card.Text className="text-right"><span className="blockquote-footer">By {this.publication.author}</span></Card.Text>
                     </Card.Header>
                     <Card.Body>
                         {/* {JSON.stringify(this.publication)}<br/> */}
@@ -62,14 +69,27 @@ export default class PublicationItem extends React.Component {
                     </Card.Body>
                     <hr />
                     <Card.Body>
-                        {/* {JSON.stringify(this.publication.comments[0])} */}
-                        {/* { this.publication.comments.map((comm, index) => {
-                            <p key={comm.id}>{JSON.stringify(comm)}</p>
-                            // <CommentItem comment={comm} index={index} key={comm.id} />
-                        })} */}
-                        <CommentItem comment={this.publication.comments[0]} />
-                        <CommentItem comment={this.publication.comments[1]} />
-                        <CommentItem comment={this.publication.comments[2]} />
+                            {/* <Col>Commentaires {this.publication.id}</Col> */}
+                        <Row className="align-items-center" noGutters>
+                            <Col>Commentaires : {this.state.expand}</Col>
+                            <Col>
+                            <Button
+                                variant="link"
+                                onClick={() => this.setState({expand: !this.state.expand})}
+                                aria-controls={`collapse-commentaires-${this.publication.id}`}
+                                aria-expanded={this.state.expand}
+                            >
+                                {this.state.expand ? <FaChevronUp /> : <FaChevronDown/> }
+                            </Button>
+                            </Col>
+                        </Row>
+                        <Collapse in={this.state.expand}>
+                        <div id={`collapse-commentaires-${this.publication.id}`}>
+                        { this.publication.comments.slice(0, 3).map(comm =>
+                            <CommentItem comment={comm} index={this.publication.id} key={comm.id} />
+                        )}
+                        </div>
+                        </Collapse>
                     </Card.Body>
                     <Card.Footer>
                         <Row>
