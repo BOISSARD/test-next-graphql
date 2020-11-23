@@ -12,6 +12,7 @@ See a demo on [test-react.boissard.info](http://test-react.boissard.info)
 This first one will start a server on port 3000 for the client app
 ```
 cd app
+npm install
 npm run dev
 ```
 
@@ -19,6 +20,7 @@ npm run dev
 This second one will start a server on port 4000 for the API app
 ```
 cd api
+npm install
 npm start
 ```
 
@@ -27,5 +29,6 @@ npm start
 ### The react client :
 ```
 cd app
-npm run dev
+npm install
+npm build
 ```

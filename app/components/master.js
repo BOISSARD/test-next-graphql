@@ -12,11 +12,14 @@ export default class Master extends React.Component {
 
     render() {
         return (
+            <div>
+                <h3 className="ma-2">Favourites</h3>
             <ListGroup variant="flush"  className="bg-light sidebar">
                 {this.list.map(item => (
                     <Link href={`/reddit/r/${item}`} key={item}><ListGroup.Item action >{item}</ListGroup.Item></Link>
                 ))}
             </ListGroup>
+            </div>
         )
     }
 

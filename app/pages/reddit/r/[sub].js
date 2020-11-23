@@ -90,7 +90,7 @@ export default function Subreddit(props) {
 
     const [width, height] = useWindowSize();
     let nbColumns = width < 540 ? 1 : width < 1140 ? 2 : 3
-    console.log(width, height, nbColumns, [...Array(nbColumns).keys()])
+    //console.log(width, height, nbColumns, [...Array(nbColumns).keys()])
 
     function handleLimitChange(event) {
         formVal.limit = event.target.value
@@ -129,15 +129,15 @@ export default function Subreddit(props) {
     //console.log("Subreddit", props, formVal, loading, error, data, refetch, networkStatus)
     let loadingMessage = <RedditLayout key={props.sub + loading}><Row><Col></Col><Col><br /><br /><h4>Loading...</h4></Col><Col></Col></Row></RedditLayout>
 
-    if (error || loading || networkStatus === NetworkStatus.refetch) return loadingMessage;
+    if (loading || networkStatus === NetworkStatus.refetch) return loadingMessage;
     if (error) return (
         <RedditLayout key={props.sub}>
-            <Row><Col></Col><Col><br /><br /><h4>Error !</h4></Col><Col></Col></Row>
-            <Row><Col></Col><Col xs={"auto"}><br /><br /><h4>{error}</h4></Col><Col></Col></Row>
+            <Row><Col></Col><Col xs={"auto"}><br /><br /><h4>Error !</h4></Col><Col></Col></Row>
+            <Row><Col></Col><Col xs={"auto"}><br /><br /><h4>{`${error}`}</h4></Col><Col></Col></Row>
         </RedditLayout>
     )
 
-    console.log("data", data, data && data.subreddit.publications.length)
+    //console.log("data", data, data && data.subreddit.publications.length)
     return (
         <RedditLayout key={props.sub + loading}>
             {!!data.subreddit.header &&
@@ -193,7 +193,6 @@ export default function Subreddit(props) {
                     <Form.Group>
                         <Form.Label>Sort By</Form.Label>
                         <Form.Control as="select" value={formVal.sort} onChange={handleSortChange} placeholder="Sort by">
-                            <option value="relevance">Relevance</option>
                             <option value="hot">Hot</option>
                             <option value="top">Top</option>
                             <option value="new">New</option>
@@ -215,6 +214,7 @@ export default function Subreddit(props) {
                     </Form.Group>
                 </Col>
             </Row>
+
             <h2>{data.subreddit.publications.length} publications found</h2>
             {/* <Row>
                 {[...Array(nbColumns).keys()].forEach(colNb => {

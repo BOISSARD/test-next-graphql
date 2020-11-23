@@ -5,7 +5,7 @@ const typeDefs = gql`
         search(keyword: String!, limit: Int, sort: String, time: String, after: String): [Subreddit]
         subreddit(name: String!, limit: Int, sort: String, time: String, after: String): Subreddit 
         me: User
-        favoris: [Subreddit]
+        favourites: [Subreddit]
     }
 
     type Mutation {
@@ -71,7 +71,7 @@ const typeDefs = gql`
     type User {
         id: ID!
         email: String!
-        favoris: [Subreddit]!
+        favourites: [Subreddit]!
         token: String
     }
 `;

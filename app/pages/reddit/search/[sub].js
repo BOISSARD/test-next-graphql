@@ -43,14 +43,14 @@ export default function SearchSubreddit(props) {
 
     let content = null
 
-    if (error || loading || networkStatus === NetworkStatus.refetch) return loadingMessage;
+    if (loading || networkStatus === NetworkStatus.refetch) return loadingMessage;
     if (error) return (
         <div>
         <Row><Col></Col><Col><br /><br /><h4>Error !</h4></Col><Col></Col></Row>
         <Row><Col></Col><Col xs={"auto"}><br /><br /><h4>{error}</h4></Col><Col></Col></Row>
         </div>
     )
-    console.log("data", data, data && data.search.length)
+    //console.log("data", data, data && data.search.length)
     if(data && data.search) 
         content = (
             <Row>
