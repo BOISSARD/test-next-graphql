@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { gql, useQuery } from '@apollo/client';
 
 import { favouritesVar } from '../utils/cache';
@@ -53,14 +54,16 @@ export default function Master(props) {
 	if (error) return <div>{`An error occurred, ${error}`}</div>
     if (!data) return <div>No data!</div>;
     
-    console.log("Master", data.favourites)
+    const router = useRouter()
+    
+    console.log("Master", router)
 
     return (
         <div>
             <h4 className="ma-2">Favourites</h4>
             <ListGroup variant="flush"  className="bg-light sidebar">
                 {data.favourites.map(item => (
-                    <FavouriteItem key={item.name} favourite={item}/>
+                    <FavouriteItem key={item.name} favourite={item} active={router.asPath === `/reddit/r/${item.name}`}/>
                 ))}
             </ListGroup>
         </div>
