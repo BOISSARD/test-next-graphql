@@ -63,6 +63,8 @@ const typeDefs = gql`
         id: ID!
         message: String
         author: String
+        date: Int
+        ups: Int
         replies: [Comment]!
     }
 

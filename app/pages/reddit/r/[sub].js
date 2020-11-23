@@ -48,6 +48,10 @@ const GET_SUBREDDIT = gql`
                 text
                 comments {
                     id
+                    message
+                    author
+                    date
+                    ups
                 }
             }
         }

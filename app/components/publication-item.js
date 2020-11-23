@@ -2,6 +2,8 @@ import Link from 'next/link'
 import moment from 'moment'
 import { AllHtmlEntities } from "html-entities";
 
+import CommentItem from './comment-item';
+
 import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -18,8 +20,7 @@ export default class PublicationItem extends React.Component {
         this.publication = props.publication
         this.index = props.index
         this.entities = new AllHtmlEntities()
-        console.log("PublicationItem", this.publication)
-        console.log(this.publication.media.url_type, this.publication.media.url_type && this.publication.media.url_type.includes("link"), this.publication.media.url_type && this.publication.media.url_type.includes("image"), this.publication.media.url_type && this.publication.media.url_type.includes("video"))
+        // console.log("PublicationItem", this.publication)
     }
 
     render() {
@@ -61,7 +62,14 @@ export default class PublicationItem extends React.Component {
                     </Card.Body>
                     <hr />
                     <Card.Body>
-                        sdazdz
+                        {/* {JSON.stringify(this.publication.comments[0])} */}
+                        {/* { this.publication.comments.map((comm, index) => {
+                            <p key={comm.id}>{JSON.stringify(comm)}</p>
+                            // <CommentItem comment={comm} index={index} key={comm.id} />
+                        })} */}
+                        <CommentItem comment={this.publication.comments[0]} />
+                        <CommentItem comment={this.publication.comments[1]} />
+                        <CommentItem comment={this.publication.comments[2]} />
                     </Card.Body>
                     <Card.Footer>
                         <Row>
