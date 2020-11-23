@@ -1,26 +1,40 @@
 import Link from 'next/link'
+import { gql, useQuery } from '@apollo/client';
 
 import ListGroup from 'react-bootstrap/ListGroup'
 
-export default class Master extends React.Component {
+export const USER_GET = gql`
+	query USER_GET{
+		User {
+			id
+			token
+			email
+			favourites {
+				name
+			}
+		}
+	}
+`
 
-    constructor(props) {
-        super(props);
-        this.list = props.list
-        //console.log("Master", this.list)
-    }
+export default function Master(props) {
 
-    render() {
-        return (
-            <div>
-                <h3 className="ma-2">Favourites</h3>
-            <ListGroup variant="flush"  className="bg-light sidebar">
-                {this.list.map(item => (
-                    <Link href={`/reddit/r/${item}`} key={item}><ListGroup.Item action >{item}</ListGroup.Item></Link>
-                ))}
-            </ListGroup>
-            </div>
-        )
-    }
+	const { loading, error, data } = useQuery(USER_GET);
+
+	if (loading) return <div>Loading</div>
+	if (error) return <div>{`An error occurred, ${error}`}</div>
+    if (!data) return <div>No data!</div>;
+    
+    console.log("Master", data)
+
+    return (
+        <div>
+            <h3 className="ma-2">Favourites</h3>
+        <ListGroup variant="flush"  className="bg-light sidebar">
+            {/* {props.list.map(item => (
+                <Link href={`/reddit/r/${item}`} key={item}><ListGroup.Item action >{item}</ListGroup.Item></Link>
+            ))} */}
+        </ListGroup>
+        </div>
+    )
 
 }

@@ -1,5 +1,6 @@
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import { ApolloProvider, ApolloClient, gql } from '@apollo/client';
 import Head from 'next/head'
+import { cache } from '../utils/cache';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -9,7 +10,16 @@ export default function MyApp({ Component, pageProps }) {
 
     const client = new ApolloClient({
         uri: 'http://localhost:4000',
-        cache: new InMemoryCache()
+        cache,
+        headers: {
+            authorization: typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '',
+        },
+        typeDefs: gql`
+            extend type Query {
+                isLoggedIn: Boolean!
+                favourites: [String!]!
+            }
+        `
     });
 
     return (

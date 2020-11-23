@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { gql, useMutation } from '@apollo/client';
 
+import { isLoggedInVar } from '../utils/cache';
+
 import Modal from 'react-bootstrap/Modal'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -14,41 +16,65 @@ export const USER_LOGIN = gql`
     mutation Login($email: String!) {
         login(email: $email) {
             id
-            email
             token
+            email
+            favourites {
+                name
+            }
         }
     }
 `;
 
-let firstConnexion = true
+//let firstTry = true
 
 export default function LoginModal(props) {
 
-    const [login, { loading, error, data }] = useMutation(USER_LOGIN);
+    const [login, { loading, error, data }] = useMutation(USER_LOGIN, { 
+        onCompleted({login}) {
+            console.log("onCompleted", login)
+            localStorage.setItem('token', login.token);
+            localStorage.setItem('userId', login.id);
+            isLoggedInVar(true)
+            handleClose()
+        },
+        /*update(cache, { data }) {
+            console.log("update", cache, data.login)
+            if(data.login && data.login.id) {
+                cache.write({
+                    query,
+                    data
+                })
+                console.log("update", cache.read({
+                    query
+                }))
+            }
+        }*/
+    });
     const [email, setEmail] = useState(null);
     // let email = null
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false)//show = false //setShow(false);
     const handleShow = () => setShow(true)//show = true //setShow(true);
 
+    const [alerts, setAlerts] = useState([])
+
     useEffect(() => setShow(props.show), [props.show]);
     useEffect(() => props.showChanged(show), [show]);
 
     function handleLogin(event) {
         event.preventDefault();
+        //firstTry = false
         if (!email) return
-        console.log("handleLogin", email)
         login({variables: { email: email} })
-        console.log("after login", loading, error, data)
         //handleClose()
     }
 
-    //console.log("display data", data, !!data)
-    if(!!data && firstConnexion) {
-        console.log("login data", data)
-        handleClose()
-        firstConnexion = false
-    }
+    // console.log("display data", "\n", loading, error, data, "\n", loading, !!error, !!data)
+    /*if(!!data && !!data.login) {
+        setTimeout(() => {
+            handleClose()
+        }, 1000)
+    }*/
 
     return (
         <Modal show={show} onHide={handleClose} centered>
@@ -56,18 +82,33 @@ export default function LoginModal(props) {
                 <Modal.Title>Login</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {/* {`${loading}${!!error}${!!data}`}
-                <Alert key={`${loading}${!!error}${!!data}`} variant={loading ? "info": "success"}>
-                        Loading...
+                {/* {`${loading}${!!error}${!!data}`}   key={`${loading}${!!error}${!!data}${firstTry}`}*/}
+                {/* loading &&
+                <Alert key={`loading-${loading}-${firstTry}`} variant="info">
+                    Loading...
+                </Alert> 
+                }
+                { (!!error || !(data && !!data.login)) && firstTry &&
+                <Alert key={`error-${!!error}-${!!data && !!data.login}-${firstTry}`} variant="danger">
+                    Email incorrect
+                </Alert> 
+                }
+                { data && !!data.login &&
+                <Alert key={`success-${!!data.login}`} variant="success">
+                    Success connexion {`${data}`}
+                </Alert> 
+                */}
+                {/* <Alert key={`${loading}${!!error}${!!data}${firstTry}`} variant="info">
+                    {`${loading}${!!error}${!!data}${firstTry}`}
+                    {loading ? "Loading..." : "Email incorrect"}
                 </Alert> */}
-                <Form inline onSubmit={handleLogin}>
+                <Form onSubmit={handleLogin}>
                     <Row className="align-items-center">
-                        <Col xs={4}>
+                        <Col xs={{span: 3, offset: 1}}>
                             <Form.Label htmlFor="emailInput">Email :</Form.Label>
                         </Col>
-                        <Col xs={4}>
+                        <Col xs={7}>
                             <Form.Control
-                                className="mb-2 mr-sm-2"
                                 id="emailInput"
                                 placeholder="Email address"
                                 onChange={event => setEmail(event.target.value)}
@@ -77,8 +118,16 @@ export default function LoginModal(props) {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="danger" onClick={handleClose}>Cancel</Button>
-                <Button variant="success" onClick={handleLogin}>Login</Button>
+                <Row className="align-items-center">
+                    <Col></Col>
+                    <Col xs={"auto"}>
+                        <Button block variant="danger" onClick={handleClose}>Cancel</Button>
+                    </Col>
+                    <Col xs={"auto"}>
+                        <Button block variant="success" onClick={handleLogin}>Login</Button>
+                    </Col>
+                    <Col ></Col>
+                </Row>
             </Modal.Footer>
         </Modal>
     )

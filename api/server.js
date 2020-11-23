@@ -22,11 +22,13 @@ const store = (() => {
 	const favourites = db.define('favourites', {
 		createdAt: Sequelize.DATE,
 		updatedAt: Sequelize.DATE,
-		subredditId: Sequelize.INTEGER,
+		name: Sequelize.INTEGER,
 		userId: Sequelize.INTEGER,
 	});
 
 	db.sync()//{force: true})
+	users.findAll().then(all => console.log("Users : ", all.length, all));
+	favourites.findAll().then(all => console.log("Favourites :", all.length, all));
   
 	return { db, users, favourites };
 })();
@@ -38,7 +40,6 @@ const context = async ({ req }) => {
 	console.log("context", email)
 	const users = await store.users.findOrCreate({ where: { email } });
 	const user = users && users[0] ? users[0] : null;
-  
 	return { user };
 };
 

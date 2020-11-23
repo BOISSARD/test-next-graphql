@@ -10,14 +10,8 @@ const typeDefs = gql`
 
     type Mutation {
         login(email: String): User
-        addFavori(name: String): FavoriUpdateResponse!
-        removeFavori(name: String): FavoriUpdateResponse!
-    }
-
-    type FavoriUpdateResponse {
-      success: Boolean!
-      message: String
-      subreddit: Subreddit
+        addFavourite(name: String): Boolean!
+        removeFavourite(name: String): Boolean!
     }
 
     type Subreddit {

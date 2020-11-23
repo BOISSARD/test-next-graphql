@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { gql, useMutation } from '@apollo/client';
+import { gql, useApolloClient, useQuery } from '@apollo/client';
+
 import LoginModal from '../components/login-modal'
+import { isLoggedInVar } from '../utils/cache';
 
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
@@ -11,25 +13,28 @@ import Button from 'react-bootstrap/Button'
 import InputGroup from 'react-bootstrap/InputGroup'
 import { FaSearch } from 'react-icons/fa';
 
+const IS_LOGGED_IN = gql`
+    query IsUserLoggedIn {
+        isLoggedIn @client
+    }
+`;
 
 export default function Defaultlayout(props) {
 
     const router = useRouter()
+    const client = useApolloClient();
+
+    const { data } = useQuery(IS_LOGGED_IN);
 
     const [show, setShow] = useState(false);
-    const handleShow = () => setShow(true)//show = true //setShow(true);
-    // let show = false
+    const handleShow = () => setShow(true)
     const [subreddit, setSubreddit] = useState(null);
-    // let subreddit = null
-    //const [email, setEmail] = useState(null);
-    // let email = null
 
     function handleSubmit(event) {
-        //console.log("handleSubmit", event, state);
         event.preventDefault();
         var formVal = router.query
         delete formVal.sub
-        console.log("handleSubmit", event, subreddit, router);
+        //console.log("handleSubmit", event, subreddit, router);
         if (router.pathname !== "/reddit/search/[sub]" || !subreddit)
             router.push(`/reddit/search/${!!subreddit ? subreddit : ""}`)
         else
@@ -37,6 +42,14 @@ export default function Defaultlayout(props) {
                 pathname: `/reddit/search/${subreddit}`,
                 search: "?" + new URLSearchParams(Object.assign({}, formVal)).toString()
             })
+    }
+
+    function handleLogout() {
+        client.cache.evict({ fieldName: "me" })
+        client.cache.gc()
+        localStorage.removeItem('token')
+        localStorage.removeItem('userId')
+        isLoggedInVar(false)
     }
 
     return (
@@ -56,10 +69,14 @@ export default function Defaultlayout(props) {
                         </InputGroup.Append>
                     </InputGroup>
                 </form>
-                <Button variant="outline-light" className="mr-2 px-4" onClick={handleShow}>Login</Button>
+                {!data.isLoggedIn ?
+                    <Button variant="outline-light" className="mr-2 px-4" onClick={handleShow}>Login</Button>
+                    :
+                    <Button variant="outline-light" className="mr-2 px-4" onClick={handleLogout}>Logout</Button>
+                }
             </Navbar>
 
-            <LoginModal show={show} showChanged={event => {console.log("parent", event); setShow(event)}}/>
+            <LoginModal show={show} showChanged={event => setShow(event)} />
 
             <div className="custom-container">
                 {/* <this.component {...this.pageProps} /> */}
