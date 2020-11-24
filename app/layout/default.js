@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 
 import LoginModal from '../components/login-modal'
-import { isLoggedInVar, favouritesVar } from '../utils/cache';
+import { isLoggedInVar, favoritesVar } from '../utils/cache';
 
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
@@ -25,7 +25,8 @@ const ME = gql`
             id
             email
             token
-            favourites {
+            favorites {
+                id
                 name
             }
         }
@@ -63,7 +64,7 @@ export default function Defaultlayout(props) {
         localStorage.removeItem('token')
         localStorage.removeItem('userId')
         isLoggedInVar(false)
-        favouritesVar([])
+        favoritesVar([])
     }
 
     if(data.isLoggedIn){
@@ -71,8 +72,8 @@ export default function Defaultlayout(props) {
     }
 
     let meData = useQuery(ME).data
-    if(meData && meData.me && meData.me.favourites && meData.me.favourites.length) {
-        favouritesVar(meData.me.favourites)
+    if(meData && meData.me && meData.me.favorites && meData.me.favorites.length) {
+        favoritesVar(meData.me.favorites)
     }
 
     return (

@@ -3,7 +3,7 @@ module.exports = {
         search: (_, { keyword, limit, sort, time, after }, { dataSources }) => dataSources.redditAPI.searchSubreddits({ keyword: keyword, limit: limit, sort: sort, time: time, after: after }),
         subreddit: (_, { name, limit, sort, time, after }, { dataSources }) => dataSources.redditAPI.subreddit({ name: name, limit: limit, sort: sort, time: time, after: after }),
         me: (_, __, { dataSources }) => dataSources.userAPI.findOrCreateUser(),
-        favourites: (_, __, { dataSources }) => dataSources.userAPI.getFavourites(),
+        favorites: (_, __, { dataSources }) => dataSources.userAPI.getFavorites(),
     },
     Mutation: {
         login: async (_, { email }, { dataSources }) => {
@@ -13,7 +13,7 @@ module.exports = {
                 return user;
             }
         },
-        addFavourite: (_, { name }, {dataSources}) => dataSources.userAPI.addFavourite({ name }),
-        removeFavourite: (_, { name }, {dataSources}) => dataSources.userAPI.removeFavourite({ name })
+        addFavorite: (_, { name }, {dataSources}) => dataSources.userAPI.addFavorite({ name }),
+        removeFavorite: (_, { name }, {dataSources}) => dataSources.userAPI.removeFavorite({ name })
     }
 };

@@ -2,15 +2,9 @@ import { ApolloProvider, ApolloClient, gql, useQuery } from '@apollo/client';
 import Head from 'next/head'
 
 import DefaultLayout from '../layout/default'
-import { cache, isLoggedInVar, favouritesVar } from '../utils/cache';
+import { cache } from '../utils/cache';
 
 import 'bootstrap/dist/css/bootstrap.css';
-
-const IS_LOGGED_IN = gql`
-    query IsUserLoggedIn {
-        isLoggedIn @client
-    }
-`;
 
 export default function MyApp({ Component, pageProps }) {
 
@@ -23,7 +17,7 @@ export default function MyApp({ Component, pageProps }) {
         typeDefs: gql`
             extend type Query {
                 isLoggedIn: Boolean!
-                favourites: [String!]!
+                favorites: [Subreddit!]!
             }
         `
     });

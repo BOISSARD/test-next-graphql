@@ -61,7 +61,7 @@ export default function SearchSubreddit(props) {
     // )
 
     return (
-        <SearchLayout key={props.sub}>
+        <SearchLayout key={props.sub} sub={props.sub}>
             <h2>Search for "{props.sub}", {data.search.length} found</h2>
             {/* {content} */}
             <Row>

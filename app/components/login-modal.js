@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router'
 import { gql, useMutation } from '@apollo/client';
 
-import { isLoggedInVar, favouritesVar } from '../utils/cache';
+import { isLoggedInVar, favoritesVar } from '../utils/cache';
 
 import Modal from 'react-bootstrap/Modal'
 import Row from 'react-bootstrap/Row'
@@ -18,16 +18,17 @@ export const USER_LOGIN = gql`
             id
             token
             email
-            favourites {
+            favorites {
+                id
                 name
-            }
+            }  
         }
     }
 `;
 
-export const SET_FAVOURITES = gql`
+export const SET_FAVORITES = gql`
 	query SetFavorites {
-		favourites @client
+		favorites @client
     }
 `
 
@@ -46,7 +47,7 @@ export default function LoginModal(props) {
         update(cache, { data }) {
             console.log("update", cache, data.login)
             if(data.login && data.login.id) {
-                favouritesVar(data.login.favourites)
+                favoritesVar(data.login.favorites)
             }
         }
     });

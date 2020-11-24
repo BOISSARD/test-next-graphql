@@ -19,7 +19,7 @@ const store = (() => {
 		token: Sequelize.STRING,
 	});
   
-	const favourites = db.define('favourites', {
+	const favorites = db.define('favorites', {
 		createdAt: Sequelize.DATE,
 		updatedAt: Sequelize.DATE,
 		name: Sequelize.INTEGER,
@@ -28,9 +28,9 @@ const store = (() => {
 
 	db.sync()//{force: true})
 	users.findAll().then(all => console.log("Users : ", all.length, all));
-	favourites.findAll().then(all => console.log("Favourites :", all.length, all));
+	favorites.findAll().then(all => console.log("Favorites :", all.length, all));
   
-	return { db, users, favourites };
+	return { db, users, favorites };
 })();
 
 const context = async ({ req }) => {

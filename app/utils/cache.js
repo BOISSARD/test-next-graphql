@@ -18,21 +18,22 @@ export const cache = new InMemoryCache({
                         return isLoggedInVar()
                     }*/
                 },
-                favourites: {
+                favorites: {
                     read() {
-                        return favouritesVar();
+                        return favoritesVar();
                     },
                     merge(existing, incoming) {
-                        let favourites = [];
-                        if (existing && existing.favourites) {
-                            favourites = favourites.concat(existing.favourites);
+                        console.log("favorites merge", existing, incoming)
+                        let favorites = [];
+                        if (existing && existing.favorites) {
+                            favorites = favorites.concat(existing.favorites);
                         }
-                        if (incoming && incoming.favourites) {
-                            favourites = favourites.concat(incoming.favourites);
+                        if (incoming && incoming.favorites) {
+                            favorites = favorites.concat(incoming.favorites);
                         }
                         return {
                             ...incoming,
-                            favourites,
+                            favorites,
                         };
                     }
                 }
@@ -42,4 +43,4 @@ export const cache = new InMemoryCache({
 });
 
 export const isLoggedInVar = makeVar(typeof window !== 'undefined' ? !!localStorage.getItem('token') : false);
-export const favouritesVar = makeVar([]);
+export const favoritesVar = makeVar([]);

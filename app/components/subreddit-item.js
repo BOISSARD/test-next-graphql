@@ -1,18 +1,97 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { gql, useQuery, useMutation } from '@apollo/client';
+
+import { favoritesVar } from '../utils/cache';
 
 import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
 import Button from 'react-bootstrap/Button'
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaHeartBroken } from 'react-icons/fa';
+
+export const FAVORITES = gql`
+	query Favorites {
+		favorite {
+            id
+            name
+        }
+	}
+`;
+
+export const GET_FAVORITES = gql`
+	query GetFavorites {
+		favorites @client
+	}
+`;
+
+export const ADD_FAVORITE = gql`
+    mutation addFavorite($name: String!) {
+        addFavorite(name: $name) {
+            success
+            message
+            favorite {
+                id
+                name
+            } 
+        }
+    }
+`;
+
+export const REMOVE_FAVORITE = gql`
+    mutation removeFavorite($name: String!) {
+        removeFavorite(name: $name) {
+            success
+            message
+            favorite {
+                id
+                name
+            } 
+        }
+    }
+`;
 
 export default function SubredditItem (props) {
+
+    const [favor, { loading, error, data }] = useMutation(ADD_FAVORITE, { 
+        variables: { name: props.subreddit.name },
+        onCompleted(data) {
+            console.log("favor onCompleted", data.addFavorite)
+            // if(data.addFavorite.success && data.addFavorite.favorite)
+            //     favoritesVar([data.addFavorite.favorite.name])
+        },
+        update(cache, { data: { addFavorite } }){
+            console.log("favor update", addFavorite.favorite)
+            cache.modify({
+                id: cache.identify({
+                    __typename: "User",
+                    id: localStorage.getItem('userId'),
+                }),
+                fields: {
+                    favorites(allFavorites) {
+                        const favoriteRef = cache.writeFragment({
+                            data: addFavorite.favorite,
+                            fragment: gql`
+                                fragment RemoveFavorite on Favorite {
+                                    name
+                                }
+                            `
+                        })
+                        let newTab = allFavorites.slice().push(favoriteRef)//.filter(favRef => favRef.__ref !== favoriteRef.__ref)
+                        console.log(allFavorites, favoriteRef, newTab)
+                        return newTab
+                    }
+                }
+            })
+        }
+    })
 
     function handleHeart(event) {
         event.preventDefault();
         console.log("SubredditItem handleHeart", props.subreddit.name)
+        favor()
     }
 
     let [hover, setHover] = useState(false)
@@ -26,7 +105,7 @@ export default function SubredditItem (props) {
 
     return (
         <div>
-            <Card className="bg-dark text-white card mb-4" >
+            <Card className="bg-dark text-white mb-4" >
                 {/* style={{backgroundColor: props.subreddit.color}} */}
                 {!!props.subreddit.header &&
                     <div className="header-img-cover">

@@ -5,13 +5,13 @@ const typeDefs = gql`
         search(keyword: String!, limit: Int, sort: String, time: String, after: String): [Subreddit]
         subreddit(name: String!, limit: Int, sort: String, time: String, after: String): Subreddit 
         me: User
-        favourites: [Subreddit]
+        favorites: [Subreddit]
     }
 
     type Mutation {
         login(email: String): User
-        addFavourite(name: String): Boolean!
-        removeFavourite(name: String): Boolean!
+        addFavorite(name: String): FavoriteResponse!
+        removeFavorite(name: String): FavoriteResponse!
     }
 
     type Subreddit {
@@ -65,8 +65,14 @@ const typeDefs = gql`
     type User {
         id: ID!
         email: String!
-        favourites: [Subreddit]!
+        favorites: [Subreddit]!
         token: String
+    }
+
+    type FavoriteResponse {
+        success: Boolean,
+        message: String,
+        favorite: Subreddit
     }
 `;
 

@@ -11,19 +11,21 @@ export default function SearchLayout(props) {
 
     const router = useRouter()
     var formVal = router.query
-    var sub = formVal.sub
     delete formVal.sub
-    //console.log("SearchLayout", props, formVal)
-    let children = props.children
 
     function handleLimitChange(event) {
-        //console.log("handleLimitChange", event.target.value, new URLSearchParams(Object.assign({}, formVal, {limit : event.target.value})).toString(), router)
+        formVal.limit = event.target.value
+        console.log("Subreddit handleLimitChange", event.target.value, formVal, router.pathname, props.sub)
         router.push({
+            pathname: router.pathname.replace("[sub]", props.sub),
+            search: "?" + new URLSearchParams(formVal).toString()
+        })
+        /*router.push({
             pathname: router.pathname.replace("[sub]", sub),
             search: "?" + new URLSearchParams(Object.assign({}, formVal, {limit : event.target.value})).toString()
-        })
+        })*/
     }
-    function handleSortChange(event) {
+    /*function handleSortChange(event) {
         //console.log("handleSortChange", event.target.value, new URLSearchParams(Object.assign({}, formVal, {sort : event.target.value})).toString(), router)
         router.push({
             pathname: router.pathname.replace("[sub]", sub),
@@ -36,7 +38,7 @@ export default function SearchLayout(props) {
             pathname: router.pathname.replace("[sub]", sub),
             search: "?" + new URLSearchParams(Object.assign({}, formVal, {time : event.target.value})).toString()
         })
-    }
+    }*/
     
     return (
         <RedditLayout>
@@ -95,8 +97,8 @@ export default function SearchLayout(props) {
                 </Col>
             </Row> */}
             {/* <div style={{overflowY: "scroll"}}> */}
-                {children}
-                {/* {this.children} */}
+                {props.children}
+                {/* {props.children} */}
             {/* </div> */}
         </RedditLayout>
     )
