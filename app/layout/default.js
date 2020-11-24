@@ -67,6 +67,7 @@ export default function Defaultlayout(props) {
         client.cache.evict({ fieldName: "me" })
         client.cache.evict({ fieldName: "favorites" })
         client.cache.gc()
+        client.resetStore()
     }
 
     let meData = useQuery(ME).data

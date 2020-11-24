@@ -4,8 +4,8 @@ Subject :
 
 ![Subject](./images/Technical_exercise_Full_Stack_sans_nom.png)
 
-See a demo on [test-react.boissard.info](http://test-react.boissard.info)
-for the specific graphql api see on [api.test-react.boissard.info](http://api.test-react.boissard.info)
+<!-- See a demo on [test-react.boissard.info](http://test-react.boissard.info)
+for the specific graphql api see on [api.test-react.boissard.info](http://api.test-react.boissard.info) -->
 
 ## Launch in development mode
 

@@ -1,4 +1,5 @@
-const { ApolloServer } = require('apollo-server-express');
+// const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server');
 const express = require('express');
 const typeDefs = require('./model/schema');
 const resolvers = require('./model/resolvers');
@@ -56,15 +57,17 @@ const server = new ApolloServer({
 	context,
 });
 
-const app = express();
-server.applyMiddleware({ app, cors: {
-	origin: '*',
-	credentials: true
-  } 
+server.listen(4444).then(({url}) => {
+	console.log(`Server is running at ${url} !`);
 });
-// server.listen(4444).then(({url}) => {
-// 	console.log(`Server is running at ${url} !`);
+
+// const app = express();
+// server.applyMiddleware({ app, cors: {
+// 	origin: '*',
+// 	headers: "Origin, X-Requested-With, Content-Type, Accept",
+// 	credentials: true
+//   } 
 // });
-app.listen({ port: 4444 }, (url) => {
-	console.log(`Server is running on port 4444 !`);
-});
+// app.listen({ port: 4444 }, (url) => {
+// 	console.log(`Server is running on port 4444 !`);
+// });

@@ -9,8 +9,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 export default function MyApp({ Component, pageProps }) {
 
     const client = new ApolloClient({
-        // uri: 'http://localhost:4000',
-        uri: 'https://api.test-react.boissard.info/',
+        uri: 'http://localhost:4444',
+        //uri: 'https://api.test-react.boissard.info/',
         cache,
         headers: {
             authorization: typeof window !== 'undefined' ? localStorage.getItem('token') || '' : '',
