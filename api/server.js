@@ -55,7 +55,7 @@ const server = new ApolloServer({
 	context,
 });
 
-server.listen().then(({url}) => {
+server.listen(4444).then(({url}) => {
 	console.log(`
 		Server is running at ${url} !
 	`);
