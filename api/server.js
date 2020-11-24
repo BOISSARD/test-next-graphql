@@ -1,4 +1,5 @@
-const { ApolloServer } = require('apollo-server');
+const { ApolloServer } = require('apollo-server-express');
+const express = require('express');
 const typeDefs = require('./model/schema');
 const resolvers = require('./model/resolvers');
 const RedditAPI = require('./model/subreddit');
@@ -55,8 +56,15 @@ const server = new ApolloServer({
 	context,
 });
 
-server.listen(4444).then(({url}) => {
-	console.log(`
-		Server is running at ${url} !
-	`);
+const app = express();
+server.applyMiddleware({ app, cors: {
+	origin: '*',
+	credentials: true
+  } 
+});
+// server.listen(4444).then(({url}) => {
+// 	console.log(`Server is running at ${url} !`);
+// });
+app.listen({ port: 4444 }, (url) => {
+	console.log(`Server is running on port 4444 !`);
 });
