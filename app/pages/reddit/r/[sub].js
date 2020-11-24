@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useLayoutEffect, useState, useEffect } from 'react';
 
 import { gql, useQuery, NetworkStatus } from '@apollo/client';
-import moment from 'moment'
 
 import RedditLayout from '../../../layout/reddit'
 import PublicationItem from '../../../components/publication-item';
+import SubredditHeader from '../../../components/subreddit-header'
 
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -13,6 +13,7 @@ import Form from 'react-bootstrap/Form'
 import Card from 'react-bootstrap/Card'
 import Image from 'react-bootstrap/Image'
 import CardColumns from 'react-bootstrap/CardColumns'
+import { FaHeart, FaRegHeart, FaHeartBroken } from 'react-icons/fa';
 
 const GET_SUBREDDIT = gql`
     query subreddit($name: String!, $limit: Int, $sort: String, $time: String, $after: String) {
@@ -83,14 +84,13 @@ function ShowWindowDimensions(props) {
 }
 
 export default function Subreddit(props) {
-
     const router = useRouter()
     var formVal = router.query
     delete formVal.sub
 
     const [width, height] = useWindowSize();
     let nbColumns = width < 540 ? 1 : width < 1140 ? 2 : 3
-    //console.log(width, height, nbColumns, [...Array(nbColumns).keys()])
+    console.log(width, height, nbColumns, [...Array(nbColumns).keys()])
 
     function handleLimitChange(event) {
         formVal.limit = event.target.value
@@ -121,60 +121,22 @@ export default function Subreddit(props) {
     if (variables.limit)
         variables.limit = parseInt(variables.limit)
     delete variables.sub
-
-
     const { loading, error, data, refetch, networkStatus } = useQuery(GET_SUBREDDIT, {
-        variables: variables //{ keyword: sub }//variables
+        variables: variables
     });
-    //console.log("Subreddit", props, formVal, loading, error, data, refetch, networkStatus)
     let loadingMessage = <RedditLayout key={props.sub + loading}><Row><Col></Col><Col><br /><br /><h4>Loading...</h4></Col><Col></Col></Row></RedditLayout>
-
     if (loading || networkStatus === NetworkStatus.refetch) return loadingMessage;
-    if (error) return (
+    if (error || !data.subreddit) return (
         <RedditLayout key={props.sub + !!error}>
             <Row><Col></Col><Col xs={"auto"}><br /><br /><h4>Error !</h4></Col><Col></Col></Row>
             <Row><Col></Col><Col xs={"auto"}><br /><br /><h4>{`${error}`}</h4></Col><Col></Col></Row>
         </RedditLayout>
     )
 
-    //console.log("data", data, data && data.subreddit.publications.length)
     return (
-        <RedditLayout key={props.sub + loading}>
-            {!!data.subreddit.header &&
-                <Card bg="light" border="light" style={{ zIndex: "10", marginBottom: "-5px" }}>
-                    <Card.Img variant="top" src={data.subreddit.header} />
-                    <Card.ImgOverlay className="text-white h3 d-flex align-items-end justify-content-center">
-                        <Card.Text>{data.subreddit.header_text}</Card.Text>
-                    </Card.ImgOverlay>
-                </Card>
-            }
-            <Card bg="light" style={{ zIndex: "1" }}>
-                <Card.Header>
-                    <Row className="align-items-center" noGutters>
-                        {!!data.subreddit.header &&
-                            <Col xs={"auto"}>
-                                <img src={data.subreddit.icon} className="header-icon-img mr-4" />
-                            </Col>
-                        }
-                        <Col xs>
-                            <h4 className="header-title">{data.subreddit.name}</h4>
-                            <blockquote className="blockquote">
-                                <p className="mb-0">{data.subreddit.title}</p>
-                            </blockquote>
-                        </Col>
-                    </Row>
-                </Card.Header>
-                <Card.Body>
-                    <Card.Text>{data.subreddit.description}</Card.Text>
-                </Card.Body>
-                <Card.Footer>
-                    <Row className="align-items-center">
-                        <Col>Since {moment(data.subreddit.date * 1000).format('DD MMM YYYY')}</Col>
-                        <Col></Col>
-                    </Row>
-                </Card.Footer>
-            </Card>
-
+        <RedditLayout key={ props.sub + loading }>
+            <SubredditHeader subreddit={data.subreddit}/>
+            
             <Row className="mt-3">
                 <Col>
                     <Form.Group>
@@ -216,36 +178,17 @@ export default function Subreddit(props) {
             </Row>
 
             <h2>{data.subreddit.publications.length} publications found</h2>
-            {/* <Row>
-                {[...Array(nbColumns).keys()].forEach(colNb => {
-                    console.log(colNb)
-                    return (
-                    <Col key={colNb}>
-                        {colNb}
-                        {data.subreddit.publications.map((publi, index) => {
-                            if (index % nbColumns === colNb) return (
-                                <PublicationItem publication={publi} index={index} key={publi.id}/>
-                            )
-                        })}
-                    </Col>
-                    )
-                })}
-            </Row> */}
             <CardColumns style={{ columnCount: 2 }}>
-                {/* <Col xs={12} md={6} xl={4} > */}
                     {data.subreddit.publications.map((publi, index) => {
                         if (index % 2 === 0) return (
                             <PublicationItem publication={publi} index={index} key={publi.id} />
                         )
                     })}
-                {/* </Col> 
-                <Col xs={12} md={6} xl={4} > */}
                     {data.subreddit.publications.map((publi, index) => {
                         if (index % 2 === 1) return (
                             <PublicationItem publication={publi} index={index} key={publi.id} />
                         )
                     })}
-                {/* </Col> */}
             </CardColumns>
 
             <style jsx>{`
@@ -262,6 +205,7 @@ export default function Subreddit(props) {
             `}</style>
         </RedditLayout>
     )
+
 }
 
 export async function getStaticProps({ params }) {

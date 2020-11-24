@@ -1,15 +1,14 @@
-import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
+import React, { useLayoutEffect, useState, useEffect } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
+import moment from 'moment'
 
-import { favoritesVar } from '../utils/cache';
-
-import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Form from 'react-bootstrap/Form'
+import Card from 'react-bootstrap/Card'
 import Image from 'react-bootstrap/Image'
-import Button from 'react-bootstrap/Button'
+import CardColumns from 'react-bootstrap/CardColumns'
 import { FaHeart, FaRegHeart, FaHeartBroken } from 'react-icons/fa';
 
 export const GET_FAVORITES = gql`
@@ -44,8 +43,8 @@ export const REMOVE_FAVORITE = gql`
     }
 `;
 
-export default function SubredditItem (props) {
-
+export default function SubredditHeader(props) {
+    
     const { data } = useQuery(GET_FAVORITES);
 
     const [favor, _] = useMutation(ADD_FAVORITE, { 
@@ -117,48 +116,56 @@ export default function SubredditItem (props) {
     }
 
     let [hover, setHover] = useState(false)
-    let [isFavorised, setIsFavorised] = useState(null)//useState(data && data.favorites && data.favorites.findIndex(fav => fav.name === props.subreddit.name) >= 0)
+    let [isFavorised, setIsFavorised] = useState(false)//useState(props.data && props.data.favorites && props.data.favorites.findIndex(fav => fav.name === props.subreddit.name) >= 0)
     useEffect(() => {
         if(data && data.favorites)
             setIsFavorised(data.favorites.findIndex(fav => fav.name === props.subreddit.name) >= 0)
         else setIsFavorised(false)
     });
 
-    var linkStyle;
-    if (hover) {
-        linkStyle = {color: '#bd2130', fontSize: "26px", cursor: "pointer"}
-    } else {
-        linkStyle = {color: '#dc3545', fontSize: "24px", margin: "1px"}
+    function toggleHover() {
+        console.log("hover avant", hover)
+        setHover(!hover)
+        console.log("hover après", hover)
     }
 
-    //console.log("SubredditItem", props.subreddit.name, isFavorised, data)
+    var linkStyle;
+    if (hover) {
+        linkStyle = { color: '#bd2130', fontSize: "26px", cursor: "pointer" }
+    } else {
+        linkStyle = { color: '#dc3545', fontSize: "24px", margin: "1px" }
+    }
 
     return (
         <div>
-            <Card className="bg-dark text-white mb-4" >
-                {/* style={{backgroundColor: props.subreddit.color}} */}
-                {!!props.subreddit.header &&
-                    <div className="header-img-cover">
-                        <img src={props.subreddit.header} className="header-img" />
-                    </div>
-                }
+            {!!props.subreddit.header &&
+                <Card bg="light" border="light" style={{ zIndex: "10", marginBottom: "-5px" }}>
+                    <Card.Img variant="top" src={props.subreddit.header} />
+                    <Card.ImgOverlay className="text-white h3 d-flex align-items-end justify-content-center">
+                        <Card.Text>{props.subreddit.header_text}</Card.Text>
+                    </Card.ImgOverlay>
+                </Card>
+            }
+            <Card bg="light" style={{ zIndex: "1" }}>
                 <Card.Header>
                     <Row className="align-items-center" noGutters>
-                        <Col xs>
-                            {!!props.subreddit.header &&
+                        {!!props.subreddit.header &&
+                            <Col xs={"auto"}>
                                 <img src={props.subreddit.icon} className="header-icon-img mr-4" />
-                            }
-                            <h4 className="header-title">{props.subreddit.name}</h4>
-                        </Col>             
-                        <Col xs={"auto"} className="pr-4">
-                        {isFavorised ? 
-                            <FaHeartBroken style={linkStyle} onClick={handleHeart} onMouseEnter={() => setHover(!hover)} onMouseLeave={() => setHover(!hover)}/>
-                            :
-                            <FaHeart style={linkStyle} onClick={handleHeart} onMouseEnter={() => setHover(!hover)} onMouseLeave={() => setHover(!hover)}/>
+                            </Col>
                         }
+                        <Col xs>
+                            <h4 className="header-title">{props.subreddit.name}</h4>
+                            <blockquote className="blockquote">
+                                <p className="mb-0">{props.subreddit.title}</p>
+                            </blockquote>
                         </Col>
                         <Col xs={"auto"}>
-                            <Link href={`/reddit/r/${props.subreddit.name}`}><Button href={`/reddit/r/${props.subreddit.name}`} variant="outline-light" className="px-5">Link</Button></Link>
+                            {isFavorised ?
+                                <FaHeartBroken className style={linkStyle} onClick={handleHeart} onMouseEnter={() => setHover(!hover)} onMouseLeave={() => setHover(!hover)} />
+                                :
+                                <FaHeart className style={linkStyle} onClick={handleHeart} onMouseEnter={() => setHover(!hover)} onMouseLeave={() => setHover(!hover)} />
+                            }
                         </Col>
                     </Row>
                 </Card.Header>
@@ -166,36 +173,12 @@ export default function SubredditItem (props) {
                     <Card.Text>{props.subreddit.description}</Card.Text>
                 </Card.Body>
                 <Card.Footer>
-                    <Row>
-                        <Col sm={6}>
-                            {/* <Card.Text>Since the {moment(props.subreddit.date * 1000).format("DD MMMM YYYY")}</Card.Text> */}
-                        </Col>
-                        <Col sm={6}>
-                        </Col>
+                    <Row className="align-items-center">
+                        <Col>Since {moment(props.subreddit.date * 1000).format('DD MMM YYYY')}</Col>
+                        <Col></Col>
                     </Row>
                 </Card.Footer>
             </Card>
-            <style jsx>{`
-                .header-img-cover {
-                    background-image: url('${props.subreddit.header}');
-                    background-position: center;
-                    background-repeat: no-repeat;
-                    background-size: cover;
-                }
-                .header-img {
-                    width: 100%;
-                    max-height: 150px;
-                    visibility: hidden;
-                }
-                .header-icon-img {
-                    max-height: 80px;
-                    border-radius: 100%;
-                }
-                .header-title {
-                    display: inline-block;
-                }
-            `}</style>
         </div>
     )
-
 }

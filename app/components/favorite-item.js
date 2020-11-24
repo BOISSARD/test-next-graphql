@@ -45,7 +45,9 @@ export default function FavoriteItem (props) {
                             `
                         })
                         //console.log("disfavor end", allFavorites, favoriteRef, allFavorites.filter(favRef => favRef.__ref !== favoriteRef.__ref))
-                        return allFavorites.filter(favRef => favRef.__ref !== favoriteRef.__ref)
+                        let favs = allFavorites && allFavorites.filter(favRef => favRef.__ref !== favoriteRef.__ref)
+                        //console.log(favs)
+                        return !!favs && favs.length > 0 ? favs : []
                     }
                 }
             })
@@ -54,7 +56,7 @@ export default function FavoriteItem (props) {
 
     function handleTrash(event) {
         event.preventDefault();
-        console.log("FavoriteItem handleTrash", props.favorite)
+        //console.log("FavoriteItem handleTrash", props.favorite)
         disfavor()
     }
 

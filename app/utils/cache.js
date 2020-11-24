@@ -25,7 +25,7 @@ export const cache = new InMemoryCache({
                     merge(existing, incoming) {
                         console.log("favorites merge", existing, incoming)
                         let favorites = [];
-                        if (existing && existing.favorites) {
+                        /*if (existing && existing.favorites) {
                             favorites = favorites.concat(existing.favorites);
                         }
                         if (incoming && incoming.favorites) {
@@ -34,7 +34,8 @@ export const cache = new InMemoryCache({
                         return {
                             ...incoming,
                             favorites,
-                        };
+                        };*/
+                        return incoming
                     }
                 }
             }

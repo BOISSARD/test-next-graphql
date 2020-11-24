@@ -46,12 +46,13 @@ export default function Master(props) {
     
     const router = useRouter()
     
-    //console.log("Master", router)
+    console.log("Master", data)
 
     return (
         <div>
             <h4 className="ma-2">Favorites</h4>
-            <ListGroup variant="flush"  className="bg-light sidebar">
+            <ListGroup key={data.favorites.length} variant="flush"  className="bg-light sidebar">
+                {/* {`${data.favorites.length}`} */}
                 {data.favorites.map(item => (
                     <FavoriteItem key={`${item.name}-${item.id}`} favorite={item} active={router.asPath === `/reddit/r/${item}`}/>
                 ))}
