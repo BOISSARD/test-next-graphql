@@ -59,16 +59,14 @@ export default function Defaultlayout(props) {
     }
 
     function handleLogout() {
-        client.cache.evict({ fieldName: "me" })
-        client.cache.gc()
         localStorage.removeItem('token')
         localStorage.removeItem('userId')
         isLoggedInVar(false)
         favoritesVar([])
-    }
-
-    if(data.isLoggedIn){
-        console.log("Defaultlayout data", data)
+        console.log("handleLogout", client.cache)
+        client.cache.evict({ fieldName: "me" })
+        client.cache.evict({ fieldName: "favorites" })
+        client.cache.gc()
     }
 
     let meData = useQuery(ME).data

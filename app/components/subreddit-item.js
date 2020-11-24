@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { gql, useQuery, useMutation } from '@apollo/client';
 
 import { favoritesVar } from '../utils/cache';
@@ -11,15 +11,6 @@ import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
 import Button from 'react-bootstrap/Button'
 import { FaHeart, FaRegHeart, FaHeartBroken } from 'react-icons/fa';
-
-export const FAVORITES = gql`
-	query Favorites {
-		favorite {
-            id
-            name
-        }
-	}
-`;
 
 export const GET_FAVORITES = gql`
 	query GetFavorites {
@@ -55,15 +46,12 @@ export const REMOVE_FAVORITE = gql`
 
 export default function SubredditItem (props) {
 
-    const [favor, { loading, error, data }] = useMutation(ADD_FAVORITE, { 
+    const { data } = useQuery(GET_FAVORITES);
+
+    const [favor, _] = useMutation(ADD_FAVORITE, { 
         variables: { name: props.subreddit.name },
-        onCompleted(data) {
-            console.log("favor onCompleted", data.addFavorite)
-            // if(data.addFavorite.success && data.addFavorite.favorite)
-            //     favoritesVar([data.addFavorite.favorite.name])
-        },
-        update(cache, { data: { addFavorite } }){
-            console.log("favor update", addFavorite.favorite)
+        update(cache, { data/*: { addFavorite }*/ }){
+            console.log("favor update", data)//addFavorite.favorite)
             cache.modify({
                 id: cache.identify({
                     __typename: "User",
@@ -71,30 +59,68 @@ export default function SubredditItem (props) {
                 }),
                 fields: {
                     favorites(allFavorites) {
+                        console.log("favor allFavorites", allFavorites)
                         const favoriteRef = cache.writeFragment({
-                            data: addFavorite.favorite,
+                            data: data.addFavorite ? data.addFavorite.favorite : null,
                             fragment: gql`
-                                fragment RemoveFavorite on Favorite {
+                                fragment Favorite on Favorite {
                                     name
                                 }
                             `
                         })
-                        let newTab = allFavorites.slice().push(favoriteRef)//.filter(favRef => favRef.__ref !== favoriteRef.__ref)
-                        console.log(allFavorites, favoriteRef, newTab)
-                        return newTab
+                        console.log("favor end", allFavorites, favoriteRef, allFavorites.slice().push(favoriteRef))
+                        return allFavorites.slice().push(favoriteRef)
                     }
                 }
             })
+        },
+        onCompleted(){
+            setIsFavorised(!isFavorised)
+        }
+    })
+    const [disfavor, __] = useMutation(REMOVE_FAVORITE, { 
+        variables: { name: props.subreddit.name },
+        update(cache, { data/*: { removeFavorite }*/ }){
+            //console.log("disfavor update", data)//, addFavorite.favorite)
+            cache.modify({
+                id: cache.identify({
+                    __typename: "User",
+                    id: localStorage.getItem('userId'),
+                }),
+                fields: {
+                    favorites(allFavorites) {
+                        //console.log("disfavor allFavorites", allFavorites, data.removeFavorite)
+                        const favoriteRef = cache.writeFragment({
+                            data: data.removeFavorite ? data.removeFavorite.favorite : null,
+                            fragment: gql`
+                                fragment Favorite on Favorite {
+                                    name
+                                }
+                            `
+                        })
+                        //console.log("disfavor end", allFavorites, favoriteRef, allFavorites.filter(favRef => favRef.__ref !== favoriteRef.__ref))
+                        return allFavorites.filter(favRef => favRef.__ref !== favoriteRef.__ref)
+                    }
+                }
+            })
+        },
+        onCompleted(){
+            setIsFavorised(!isFavorised)
         }
     })
 
     function handleHeart(event) {
         event.preventDefault();
-        console.log("SubredditItem handleHeart", props.subreddit.name)
-        favor()
+        isFavorised ? disfavor() : favor()
     }
 
     let [hover, setHover] = useState(false)
+    let [isFavorised, setIsFavorised] = useState(null)//useState(data && data.favorites && data.favorites.findIndex(fav => fav.name === props.subreddit.name) >= 0)
+    useEffect(() => {
+        if(data && data.favorites)
+            setIsFavorised(data.favorites.findIndex(fav => fav.name === props.subreddit.name) >= 0)
+        else setIsFavorised(false)
+    });
 
     var linkStyle;
     if (hover) {
@@ -102,6 +128,8 @@ export default function SubredditItem (props) {
     } else {
         linkStyle = {color: '#dc3545', fontSize: "24px", margin: "1px"}
     }
+
+    //console.log("SubredditItem", props.subreddit.name, isFavorised, data)
 
     return (
         <div>
@@ -121,7 +149,11 @@ export default function SubredditItem (props) {
                             <h4 className="header-title">{props.subreddit.name}</h4>
                         </Col>             
                         <Col xs={"auto"} className="pr-4">
-                            <FaRegHeart className style={linkStyle} onClick={handleHeart} onMouseEnter={() => setHover(!hover)} onMouseLeave={() => setHover(!hover)}/>
+                        {isFavorised ? 
+                            <FaHeartBroken className style={linkStyle} onClick={handleHeart} onMouseEnter={() => setHover(!hover)} onMouseLeave={() => setHover(!hover)}/>
+                            :
+                            <FaHeart className style={linkStyle} onClick={handleHeart} onMouseEnter={() => setHover(!hover)} onMouseLeave={() => setHover(!hover)}/>
+                        }
                         </Col>
                         <Col xs={"auto"}>
                             <Link href={`/reddit/r/${props.subreddit.name}`}><Button href={`/reddit/r/${props.subreddit.name}`} variant="outline-light" className="px-5">Link</Button></Link>

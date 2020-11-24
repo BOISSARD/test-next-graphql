@@ -38,14 +38,14 @@ export default function LoginModal(props) {
 
     const [login, { loading, error, data }] = useMutation(USER_LOGIN, { 
         onCompleted({login}) {
-            console.log("onCompleted", login)
+            console.log("login onCompleted", login)
             localStorage.setItem('token', login.token);
             localStorage.setItem('userId', login.id);
             isLoggedInVar(true)
             handleClose()
         },
         update(cache, { data }) {
-            console.log("update", cache, data.login)
+            console.log("login update", cache, data.login)
             if(data.login && data.login.id) {
                 favoritesVar(data.login.favorites)
             }

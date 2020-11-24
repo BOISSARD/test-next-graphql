@@ -9,19 +9,6 @@ import Col from 'react-bootstrap/Col'
 
 import { FaTrash, FaHeartBroken } from 'react-icons/fa';
 
-export const ADD_FAVORITE = gql`
-    mutation addFavorite($name: String!) {
-        addFavorite(name: $name) {
-            success
-            message
-            favorite {
-                id
-                name
-            }
-        }
-    }
-`;
-
 export const REMOVE_FAVORITE = gql`
     mutation removeFavorite($name: String!) {
         removeFavorite(name: $name) {
@@ -37,13 +24,10 @@ export const REMOVE_FAVORITE = gql`
 
 export default function FavoriteItem (props) {
 
-    const [disfavor, { loading, error, data }] = useMutation(REMOVE_FAVORITE, { 
+    const [disfavor, __] = useMutation(REMOVE_FAVORITE, { 
         variables: { name: props.favorite.name },
-        onCompleted(data) {
-            console.log("disfavor onCompleted", data.removeFavorite)
-        },
-        update(cache, { data: { removeFavorite } }){
-            console.log("disfavor update", removeFavorite.favorite)
+        update(cache, { data/*: { removeFavorite }*/ }){
+            //console.log("disfavor update", data)//, addFavorite.favorite)
             cache.modify({
                 id: cache.identify({
                     __typename: "User",
@@ -51,14 +35,16 @@ export default function FavoriteItem (props) {
                 }),
                 fields: {
                     favorites(allFavorites) {
+                        //console.log("disfavor allFavorites", allFavorites, data.removeFavorite)
                         const favoriteRef = cache.writeFragment({
-                            data: removeFavorite.favorite,
+                            data: data.removeFavorite ? data.removeFavorite.favorite : null,
                             fragment: gql`
-                                fragment RemoveFavorite on Favorite {
+                                fragment Favorite on Favorite {
                                     name
                                 }
                             `
                         })
+                        //console.log("disfavor end", allFavorites, favoriteRef, allFavorites.filter(favRef => favRef.__ref !== favoriteRef.__ref))
                         return allFavorites.filter(favRef => favRef.__ref !== favoriteRef.__ref)
                     }
                 }
